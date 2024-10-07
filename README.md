@@ -14,7 +14,11 @@ Dalam rangka mendukung pelestarian budaya dan kerajinan lokal Bali, kami dengan 
 Fitur-fitur yang tersedia di Bali Heritage mencakup:
 
 Pengelolaan Produk (Homepage): Jelajahi katalog produk unik yang mencerminkan kekayaan budaya Bali.
+
 Shopping Cart: Simpan dan kelola barang-barang pilihan Anda sebelum melakukan pembelian.
+
 Pembayaran: Pilihan metode pembayaran yang aman dan praktis untuk memastikan kenyamanan bertransaksi.
+
 Review: Berikan ulasan dan feedback mengenai produk yang telah Anda beli.
+
 Wishlist: Tandai produk yang Anda inginkan untuk dibeli di lain waktu.
