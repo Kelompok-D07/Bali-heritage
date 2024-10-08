@@ -9,14 +9,10 @@
 
 ## Deskripsi Aplikasi
 
-Dalam rangka mendukung pelestarian budaya dan kerajinan lokal Bali, kami dengan bangga mempersembahkan Bali Heritage - sebuah website inovatif yang memudahkan Anda untuk menjelajahi dan membeli berbagai souvenir khas Bali. Lebih dari sekadar toko online, Bali Heritage menawarkan pengalaman berbelanja yang nyaman dengan beragam fitur. Fitur-fitur yang tersedia di Bali Heritage mencakup:
+Dalam rangka mendukung pelestarian budaya dan kerajinan lokal Bali, kami dengan bangga mempersembahkan Bali Heritage -  sebuah website inovatif yang membantu Anda menemukan lokasi-lokasi souvenir terbaik di Bali. Dengan tujuan untuk memudahkan para wisatawan dan pencinta kerajinan Bali, Bali Heritage menyediakan berbagai fitur yang dirancang untuk memberikan pengalaman pencarian yang mudah dan informatif. Fitur-fitur yang tersedia di Bali Heritage mencakup:
 
-Pengelolaan Produk (Homepage): Jelajahi katalog produk unik yang mencerminkan kekayaan budaya Bali.
-
-Shopping Cart: Simpan dan kelola barang-barang pilihan Anda sebelum melakukan pembelian.
-
-Pembayaran: Pilihan metode pembayaran yang aman dan praktis untuk memastikan kenyamanan bertransaksi.
-
-Review: Berikan ulasan dan feedback mengenai produk yang telah Anda beli.
-
-Wishlist: Tandai produk yang Anda inginkan untuk dibeli di lain waktu.
+Pengelolaan Produk (Homepage): Menampilkan lokasi-lokasi souvenir dengan informasi lengkap.
+Categories: Memfilter lokasi berdasarkan jenis produk atau daerah tertentu untuk memudahkan pencarian.
+Forum: Ruang diskusi bagi pengguna untuk bertanya atau memberikan rekomendasi lokasi baru.
+Review: Pengguna dapat memberikan ulasan mengenai lokasi yang mereka kunjungi.
+Bookmark: Simpan lokasi-lokasi favorit untuk dikunjungi di kemudian hari.
