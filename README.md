@@ -14,7 +14,7 @@ Bali Heritage bukan hanya sekadar platform untuk mencari suvenir khas, tetapi ju
 
 
 
-### Link Aplikasi PWS -> [LINKS 🔗](https://muhammad-adiansyah-tokoizaka.pbp.cs.ui.ac.id/)
+### Link Aplikasi PWS -> [LINKS 🔗](https://muhammad-adiansyah-baliheritage.pbp.cs.ui.ac.id/)
 
 ### Inisial Dataset -> [LINKS 🔗](https://shop.krisnabali.co.id/)
 
