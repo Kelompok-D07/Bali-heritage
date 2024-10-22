@@ -1,0 +1,50 @@
+{% load static %}
+<div class="grid grid-cols-1 sm:grid-cols-3 px-4 sm:px-16 w-full h-20 border-b border-gray-300 items-center">
+    <a href="/home">
+        <img src="{% static 'image/logo.png' %}" alt="Logo" class="h-16 w-16 mx-auto sm:mx-0"/> 
+    </a>
+    <div class="flex justify-evenly items-center border rounded-full shadow-md h-12 w-full sm:w-72 mx-2">
+        <a href="#" onclick="showLoginAlert(event)" class="border-r-2 text-sm font-medium px-6">Our Stories</a>
+        <a href="#" onclick="showLoginAlert(event)" class="text-sm font-medium px-4">Forums</a>
+        <button class="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+    </div>
+    <div class="flex justify-end items-center gap-4">
+        <a href="#" onclick="showLoginAlert(event)" class="text-sm font-medium">Your Bookmarks</a>
+        
+        <div class="relative">
+            <button id="dropdownButton" class="flex justify-evenly items-center gap-2 rounded-full border shadow-md h-10 w-20 py-1.25 pr-1.25 pl-2 hover:shadow-lg transition-shadow duration-200" onclick="toggleDropdown()">
+                <i class="fa-solid fa-bars"></i>
+                <span class="bg-black text-white rounded-full text-center w-7 h-7 text-[10px] font-semibold flex items-center justify-center">E</span>
+            </button>
+
+            <div id="dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-10">
+                <a href="/register" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Register</a>
+                <a href="/login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showLoginAlert(event) {
+        event.preventDefault(); // Prevent the default link behavior
+        alert("You should log in first!");
+    }
+
+    function toggleDropdown() {
+        const dropdown = document.getElementById('dropdown');
+        dropdown.classList.toggle('hidden'); // Toggle the dropdown visibility
+    }
+
+    // Optional: Close the dropdown if clicked outside
+    window.onclick = function(event) {
+        if (!event.target.matches('#dropdownButton')) {
+            const dropdown = document.getElementById('dropdown');
+            if (!dropdown.classList.contains('hidden')) {
+                dropdown.classList.add('hidden');
+            }
+        }
+    }
+</script>
