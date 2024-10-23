@@ -4,14 +4,14 @@
         <img src="{% static 'image/logo.png' %}" alt="Logo" class="h-16 w-16 mx-auto sm:mx-0"/> 
     </a>
     <div class="flex justify-evenly items-center border rounded-full shadow-md h-12 w-full sm:w-72 mx-2">
-        <a href="#" onclick="showLoginAlert(event)" class="border-r-2 text-sm font-medium px-6">Our Stories</a>
-        <a href="#" onclick="showLoginAlert(event)" class="text-sm font-medium px-4">Forums</a>
+        <a href="/stories" class="border-r-2 text-sm font-medium px-6">Our Stories</a>
+        <a href="#" class="text-sm font-medium px-4">Forums</a>
         <button class="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center">
             <i class="fa-solid fa-magnifying-glass"></i>
         </button>
     </div>
     <div class="flex justify-end items-center gap-4">
-        <a href="#" onclick="showLoginAlert(event)" class="text-sm font-medium">Your Bookmarks</a>
+        <a href="#" class="text-sm font-medium">Your Bookmarks</a>
         
         <div class="relative">
             <button id="dropdownButton" class="flex justify-evenly items-center gap-2 rounded-full border shadow-md h-10 w-20 py-1.25 pr-1.25 pl-2 hover:shadow-lg transition-shadow duration-200" onclick="toggleDropdown()">
@@ -28,11 +28,6 @@
 </div>
 
 <script>
-    function showLoginAlert(event) {
-        event.preventDefault(); // Prevent the default link behavior
-        alert("You should log in first!");
-    }
-
     function toggleDropdown() {
         const dropdown = document.getElementById('dropdown');
         dropdown.classList.toggle('hidden'); // Toggle the dropdown visibility
