@@ -1,32 +1,9 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-    {% comment %} <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1 class="text-center">Stories</h1>
-            </div>
-        </div>
-        <div class="row">
-            {% for story in stories %}
-                <div class="col-md-4">
-                    <div class="card mb-4 shadow-sm">
-                        <img src="{{ story.image.url }}" class="card-img-top" alt="{{ story.title }}">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ story.title }}</h5>
-                            <p class="card-text">{{ story.description }}</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="{{ story.get_absolute_url }}" class="btn btn-sm btn-outline-secondary">View</a>
-                                </div>
-                                <small class="text-muted">{{ story.created_at }}</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-{% endblock content %} {% endcomment %}
+<div class="header">
+    {% include 'navbar.html' %}
+</div>
 
 {% if not stories_entries %}
 <p>Belum ada data Stories.</p>
@@ -52,7 +29,10 @@
 
 <br />
 
-<a href="{% url 'BaliLoka_stories:create_stories_entry' %}">
-  <button>Add New Stories Entry</button>
-</a>
+{% if user.is_superuser %}
+<a href="{% url 'BaliLoka_stories:add_stories_entry_ajax' %}">
+    <button>Add New Stories Entry</button>
+  </a>
+{% endif %}
+
 {% endblock content %}
