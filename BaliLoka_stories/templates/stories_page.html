@@ -27,3 +27,32 @@
         </div>
     </div>
 {% endblock content %} {% endcomment %}
+
+{% if not stories_entries %}
+<p>Belum ada data Stories.</p>
+{% else %}
+<table>
+  <tr>
+    <th>Name</th>
+    <th>image</th>
+    <th>Description</th>
+  </tr>
+
+  {% comment %} Berikut cara memperlihatkan data mood di bawah baris ini 
+  {% endcomment %} 
+  {% for stories_entry in stories_entries %}
+  <tr>
+    <td>{{stories_entry.name}}</td>
+    <td>{{stories_entry.image}}</td>
+    <td>{{stories_entry.description}}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+<br />
+
+<a href="{% url 'main:create_stories_entry' %}">
+  <button>Add New Stories Entry</button>
+</a>
+{% endblock content %}

@@ -1,3 +1,4 @@
 from django.contrib import admin
+from BaliLoka_stories.models import StoriesEntry
 
-# Register your models here.
+admin.site.register(StoriesEntry)
