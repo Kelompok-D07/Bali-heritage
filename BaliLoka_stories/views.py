@@ -26,8 +26,12 @@ def show_xml(request):
     data = StoriesEntry.objects.all()
     
 def show_xml(request):
-    data = MoodEntry.objects.all()
+    data = StoriesEntry.objects.all()
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
 
 def show_json(request):
-    data = MoodEntry.objects.all()
+    data = StoriesEntry.objects.all()
+    
+def show_json(request):
+    data = StoriesEntry.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
