@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('Homepage.urls')),
     path('', include('BaliLoka_stories.urls')),
+    path('',include('Review.urls')),
 ]
