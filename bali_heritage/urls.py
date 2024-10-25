@@ -23,5 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('Homepage.urls')),
     path('stories/', include('BaliLoka_stories.urls')),
+    path('',include('Review.urls')),
+    path('bookmarks/', include('bookmarks.urls')),
     path('auth/', include('authentication.urls')),  # Include the authentication URLs
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
