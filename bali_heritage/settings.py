@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-autstd+%6k7d+pqaa(klb8xkp*0rpt+zi33q7v#7s%sei*obv9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1","muhammad-adiansyah-baliheritage.pbp.cs.ui.ac.id"]
 
 
 # Application definition
@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Homepage',
     'BaliLoka_stories',
-    'authentication',
+    'Review',
     'bookmarks',
 ]
 
