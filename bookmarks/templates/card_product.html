@@ -1,12 +1,13 @@
+{% for item in bookmarks %}
 <section class="container mx-auto p-4 antialiased">
     <article class="flex flex-wrap shadow-lg group cursor-pointer transform duration-500 hover:-translate-y-1" style="max-width: 600px; position: relative;">
         <!-- Gambar Product -->
         <img class="w-full h-auto object-cover md:w-1/3" src="https://i.ibb.co/Kr4b0zJ/152013403-10158311889099633-8423107287930246533-o.jpg" alt="Product Image">
         <div class="flex flex-col justify-between p-4 w-full md:w-2/3">
             <div>
-                <h1 class="text-lg font-semibold text-gray-800">The Magnificent Bogra</h1>
+                <h1 class="text-lg font-semibold text-gray-800">{{ item.product.name }}</h1>
                 <p class="text-sm text-gray-400 mt-2 leading-relaxed">
-                    Located in Rajshahi Division, Bogra is one of the oldest and most fascinating towns in Bangladesh.
+                    {{ item.product.description }}
                 </p>
             </div>
             <div class="bg-blue-50 p-3 rounded-lg mt-2" style="overflow: hidden;">
@@ -47,3 +48,4 @@
         </div>
     </article>
 </section>
+{% endfor %}
