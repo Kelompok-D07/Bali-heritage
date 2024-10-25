@@ -5,8 +5,12 @@
         {% include 'category.html' %}
     </div>
 
-    
-    <div id="product-list mt-48">
-        {% include 'product_list.html' %}
-    </div>
+    <main>
+        <div class="flex items-center justify-center pt-90">
+            <!-- Konten dengan scroll -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-0"> <!-- Menambahkan class scrollable-content -->
+                {% include 'card_product_main.html' %}
+            </div>
+        </div>
+    </main>
 {% endblock content %}

@@ -11,12 +11,13 @@
         </button>
     </div>
     <div class="flex justify-end items-center gap-4">
-        <a href="/bookmarks" class="text-sm font-medium text-gray-400 hover:text-black">Your Bookmarks</a>
+        <a href="#" onclick="checkLogin()" class="text-sm font-medium text-gray-400 hover:text-black">Your Bookmarks</a>
+
         
         <div class="relative">
             <button id="dropdownButton" class="flex justify-evenly items-center gap-2 rounded-full border shadow-md h-10 w-20 py-1.25 pr-1.25 pl-2 hover:shadow-lg transition-shadow duration-200" onclick="toggleDropdown()">
                 <i class="fa-solid fa-bars"></i>
-                <span class="bg-black text-white rounded-full text-center w-7 h-7 text-[10px] font-semibold flex items-center justify-center">E</span>
+                <span class="material-symbols-outlined rounded-full items-center w-8 h-6 justify-center">account_circle</span>
             </button>
 
             <div id="dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg">
@@ -157,10 +158,22 @@
                 alert('Logged out successfully!');
                 document.cookie = "auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                 checkAuthState();  // Update button visibility
+                window.location.href = '/';  // Redirect to homepage after logout
             }
         });
     });
 
     // Check authentication state on page load
     document.addEventListener('DOMContentLoaded', checkAuthState);
+    function checkLogin() {
+        // Check for a cookie or any other way to determine if the user is logged in
+        const isLoggedIn = document.cookie.split(';').some(item => item.trim().startsWith('auth='));
+
+        if (!isLoggedIn) {
+            alert("You need to log in first.");
+        } else {
+            // Redirect to bookmarks page
+            window.location.href = '/bookmarks/';
+        }
+    }
 </script>
