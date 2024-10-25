@@ -1,5 +1,5 @@
 from django.urls import path
-from BaliLoka_stories.views import show_stories, create_stories_entry, show_xml, show_json, add_stories_entry_ajax
+from BaliLoka_stories.views import show_stories, create_stories_entry, show_xml, show_json, add_stories_entry_ajax, edit_mood
 
 
 app_name = 'BaliLoka_stories'
