@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Homepage',
     'BaliLoka_stories',
+    'bookmarks',
 ]
 
 MIDDLEWARE = [
