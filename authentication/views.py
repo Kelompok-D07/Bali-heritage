@@ -36,7 +36,7 @@ def login_user(request):
 
 @csrf_exempt
 def logout_user(request):
-    logout(request)
-    response = JsonResponse({"success": True})
-    response.delete_cookie("auth")
+    logout(request)  # Log out the user
+    response = redirect('/')  # Redirect to the homepage
+    response.delete_cookie("auth")  # Delete the 'auth' cookie
     return response
