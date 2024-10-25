@@ -5,6 +5,8 @@ from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from .forms import EditNotesForm
+
 
 
 @login_required(login_url='/')
@@ -32,3 +34,12 @@ def delete_bookmarks_item(request, item_id):
     return JsonResponse({'status': "Invalid request method"}, status=400)
 
 
+@csrf_exempt
+def edit_notes(request, item_id):
+    if request.method == 'POST':
+        bookmark = get_object_or_404(Bookmark, id=item_id, user=request.user)
+        form = EditNotesForm(request.POST, instance=bookmark)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'status': 'success', 'notes': bookmark.notes})
+        return JsonResponse({'status': 'error', 'errors': form.errors})
