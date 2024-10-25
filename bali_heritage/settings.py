@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'Homepage',
     'BaliLoka_stories',
     'authentication',
+    'bookmarks',
 ]
 
 MIDDLEWARE = [

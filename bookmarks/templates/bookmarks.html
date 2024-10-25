@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block meta %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    /* Styling untuk scrollbar */
+    .scrollable-content::-webkit-scrollbar {
+        width: 12px; /* Lebar scrollbar */
+    }
+
+    .scrollable-content::-webkit-scrollbar-track {
+        background: #f1f1f1; /* Warna latar belakang track scrollbar */
+        border-radius: 10px; /* Membulatkan sudut track */
+    }
+
+    .scrollable-content::-webkit-scrollbar-thumb {
+        background: #888; /* Warna thumb scrollbar */
+        border-radius: 10px; /* Membulatkan sudut thumb */
+    }
+
+    .scrollable-content::-webkit-scrollbar-thumb:hover {
+        background: orange; /* Warna thumb saat hover */
+    }
+
+    /* Mengatur tinggi dari konten scroll */
+    .scrollable-content {
+        height: calc(490px - 80px); /* Menyesuaikan tinggi dengan mengurangi tinggi header dan garis batas */
+        overflow-y: auto; /* Memungkinkan scroll vertikal */
+        padding-bottom: 0px; /* Menambahkan padding bawah untuk mencegah konten terpotong */
+    }
+
+    .delete-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+    }
+
+    .delete-button svg {
+        fill: red; /* Warna ikon delete */
+        width: 30px;
+        height: 30px;
+    }
+
+    .delete-button:hover {
+        transform: scale(1.1); /* Efek zoom saat hover */
+    }
+    
+</style>
+{% endblock meta %}
+
+{% block content %}
+{% include 'navbar.html' %}
+{% include 'category.html' %}
+
+<div class="flex items-center justify-center pt-90">
+    <div class="bg-white rounded-lg" style="width: 1200px; height: 500px; box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;">
+        <div class="box-header sticky top-0 bg-white z-10 p-6">
+            <h2 class="text-2xl font-bold mb-2">Udin's Bookmarks</h2>
+            <hr class="border-gray-300 p-0"> <!-- Garis batas -->
+        </div>
+
+        <!-- Konten dengan scroll -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-0 scrollable-content"> <!-- Menambahkan class scrollable-content -->
+            {% include 'card_product.html' %}
+            {% include 'card_product.html' %}
+            {% include 'card_product.html' %}
+            {% include 'card_product.html' %}
+            {% include 'card_product.html' %}
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
