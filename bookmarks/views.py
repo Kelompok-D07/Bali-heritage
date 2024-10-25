@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect
-from BaliLoka_stories.forms import StoriesEntryForm
-from BaliLoka_stories.models import StoriesEntry
+from bookmarks.models import Bookmark
 from django.http import HttpResponse
 from django.core import serializers
+# from django.contrib.auth.decorators import login_required
 
+# @login_required()
 def show_bookmarks(request):
-    context = {
-        'name': 'User',
-        'description': 'Hello'
-    }
+    # bookmarks = Bookmark.objects.filter(user=request.user)
+    context = {'bookmarks': "name"}
     return render(request, "bookmarks.html", context)
