@@ -18,22 +18,26 @@ def show_main(request):
 
     return render(request, "main.html", context)
 
+from uuid import UUID
+
 def create_review_entry(request, restaurant_id):
-    # Pastikan user sudah login
+    # Ensure the user is logged in
     if not request.user.is_authenticated:
-        return redirect('Homepage:main') 
-    
+        return redirect('Homepage:main')
+
+    # Get the restaurant using the UUID directly (no need for UUID conversion)
     restaurant = get_object_or_404(Restaurant, id=restaurant_id)
+
     # Form handling
     form = ReviewForm(request.POST or None)
-    if form.is_valid() and request.method == "POST":
+    if request.method == "POST" and form.is_valid():
         review = form.save(commit=False)
         review.user = request.user
         review.restaurant = restaurant
         review.save()
         url = reverse('Homepage:restaurant') + f'?restaurant_name={restaurant.name}'
-    
-        # Redirect ke URL dengan query string
+
+        # Redirect to the URL with query string
         return redirect(url)
 
     return render(request, "create_review_entry.html", {'form': form, 'restaurant': restaurant})

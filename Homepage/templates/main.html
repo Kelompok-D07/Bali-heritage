@@ -28,16 +28,21 @@
         $(document).on('click', '.category-filter', function(e) {
             e.preventDefault();
 
-            var category = $(this).data('category');  // Mendapatkan nama kategori dari elemen yang diklik
+            var category = $(this).data('category');  // Get the category name from the clicked element
             console.log(category);
 
+            // Update the styling for the clicked button
+            $('.category-filter').removeClass('text-orange-500 border-2 border-orange-500 shadow-md rounded-full'); // Remove active styles from all
+            $(this).addClass('text-orange-500 border-2 border-orange-500 shadow-md rounded-full');  // Add active styles to the clicked button
+
+            // AJAX request to filter products
             $.ajax({
                 method: "GET",
-                url: "{% url 'Homepage:filter_products' %}",  // URL menuju view filter_products
+                url: "{% url 'Homepage:filter_products' %}",  // URL to filter_products view
                 data: { 'category': category },
                 success: function(response) {
                     if (response.status === 'success') {
-                        $('.content-filtered').html(response.html);  // Mengganti isi main dengan hasil yang difilter
+                        $('.content-filtered').html(response.html);  // Update the content with the filtered results
                     } else {
                         alertify.error('Error: ' + response.message);
                     }
@@ -48,6 +53,7 @@
             });
         });
     });
-</script>    
+</script>
+        
 
 {% endblock content %}
