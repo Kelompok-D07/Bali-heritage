@@ -28,9 +28,9 @@
     <!-- Tombol untuk menambahkan review baru -->
     <div style="text-align: center; margin-bottom: 20px;">
         {% if user.is_authenticated %}
-        <a href="{% url 'review:create_review_entry' restaurant.id%}" class="btn btn-primary" style="font-size: 1rem;">
-            Add Review
-        </a>
+            <a href="{% url 'review:create_review_entry' restaurant.id %}" class="btn btn-primary" style="font-size: 1rem;">
+                Add Review
+            </a>
         {% else %}
             <p style="text-align: center; color: red;">Please login to add a review.</p>
         {% endif %}
