@@ -172,6 +172,7 @@
 
         if (!isLoggedIn) {
             alert("You need to log in first.");
+            showPopup('loginPopup');
         } else {
             // Redirect to bookmarks page
             window.location.href = '/bookmarks/';

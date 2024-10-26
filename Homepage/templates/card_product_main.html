@@ -58,19 +58,26 @@
 {% endfor %}
 <script>
     function toggleBookmark(button) {
-        const iconElement = button.querySelector('.bookmarkIcon');
-        const textElement = button.querySelector('.bookmarkText');
+        const isAuthenticated = "{{ user.is_authenticated }}";
+        if(isAuthenticated == "False"){
+                showPopup('loginPopup');
+        }
+        else {
+            const iconElement = button.querySelector('.bookmarkIcon');
+            const textElement = button.querySelector('.bookmarkText');
 
         // Check the current icon class and toggle appropriately
-        if (iconElement.classList.contains('fa-regular')) {
-            iconElement.classList.remove('fa-regular'); // Remove outlined class
-            iconElement.classList.add('fa-solid'); // Add filled class
-            textElement.textContent = 'Bookmarked'; // Change text to "Bookmarked"
-        } else {
-            iconElement.classList.remove('fa-solid'); // Remove filled class
-            iconElement.classList.add('fa-regular'); // Add outlined class
-            textElement.textContent = 'Bookmark'; // Revert text to original "Bookmark"
+            if (iconElement.classList.contains('fa-regular')) {
+                iconElement.classList.remove('fa-regular'); // Remove outlined class
+                iconElement.classList.add('fa-solid'); // Add filled class
+                textElement.textContent = 'Bookmarked'; // Change text to "Bookmarked"
+            } else {
+                iconElement.classList.remove('fa-solid'); // Remove filled class
+                iconElement.classList.add('fa-regular'); // Add outlined class
+                textElement.textContent = 'Bookmark'; // Revert text to original "Bookmark"
+            }
         }
+        
     }
 
 
@@ -78,29 +85,39 @@
     $(document).ready(function() {
         $('.bookmarkButton').click(function(e) {
             e.preventDefault();
-            $.ajaxSetup({
+
+            const isAuthenticated = "{{ user.is_authenticated }}";
+
+            if(isAuthenticated == "False"){
+                showPopup('loginPopup');
+            }
+            else {
+                $.ajaxSetup({
                 headers: {
                     'X-CSRFToken': '{{ csrf_token }}'
                 }
-            });
+                 });
 
-            var product_id = $(this).closest('article').find('.product_id').val();
-            $.ajax({
-                type: 'POST',
-                url : "{% url 'bookmarks:update_bookmarks' %}",
-                data: {
-                    'product_id': product_id,
-                    'user_username':  user_username
-                },
-                success: function (response) {
-                    if(response.status == 'added') {
-                        console.log("TERTAMBAHKAN")
+                var product_id = $(this).closest('article').find('.product_id').val();
+                $.ajax({
+                    type: 'POST',
+                    url : "{% url 'bookmarks:update_bookmarks' %}",
+                    data: {
+                        'product_id': product_id,
+                        'user_username':  user_username
+                    },
+                    success: function (response) {
+                        if(response.status == 'added') {
+                            console.log("TERTAMBAHKAN")
+                        }
+                        else if (response.status == 'deleted') {
+                            console.log("TERDELETE")
+                        }
                     }
-                    else if (response.status == 'deleted') {
-                        console.log("TERDELETE")
-                    }
-                }
-            });
+                });
+            }
+
+            
         });
     });
 </script>
