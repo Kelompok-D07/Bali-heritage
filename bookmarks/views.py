@@ -13,11 +13,13 @@ from django.template.loader import render_to_string
 
 @login_required(login_url='/')
 def show_bookmarks(request):
+    selected_category = request.GET.get("category", None)  # Get category from query parameters
     bookmarks = Bookmark.objects.filter(user=request.user)
     categories = Category.objects.all()
     context = {
         'bookmarks': bookmarks,
         'categories': categories,
+        'selected_category': selected_category,
         'alert': None  # Default alert is None
     }
     return render(request, "bookmarks.html", context)

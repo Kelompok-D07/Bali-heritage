@@ -1,13 +1,12 @@
 {% load static %}
 <div class="flex items-center h-24 space-x-5 justify-center bg-white w-screen">
     <div class="flex items-center space-x-10">
-        <!-- Link for ALL category -->
-        <a href="{% url 'Homepage:show_main' %}" class="flex flex-col items-center {% if selected_category is None %}text-black{% else %}text-gray-400{% endif %} hover:text-black gap-2">
-            <p class="text-xs font-normal">ALL</p>
+        <!-- Filter untuk Semua Kategori -->
+        <a href="#" class="category-filter flex flex-col items-center {% if selected_category is None %}border-2 border-orange-500 text-orange-500 bg-opacity-0 shadow-md{% else %}text-gray-400{% endif %} hover:bg-orange-500 hover:bg-opacity-10 transition duration-300 ease-in-out py-2 px-6 rounded-full gap-2" data-category="">
+            <p class="text-sm font-semibold tracking-wide">ALL</p>
         </a>
         {% for category in categories %}
-            <!-- Link for each category, passing the category name as a query parameter -->
-            <a href="{% url 'Homepage:show_main' %}?category={{ category.name }}" class="flex flex-col items-center {% if selected_category == category.name %}text-black{% else %}text-gray-400{% endif %} hover:text-black gap-2">
+            <a href="#" class="category-filter flex flex-col items-center {% if selected_category == category.name %}text-black{% else %}text-gray-400{% endif %} hover:text-orange-500 gap-2" data-category="{{ category.name }}">
                 <img src="{% static 'image/food.png' %}" alt="{{ category.name }}" class="h-6 w-6"/>
                 <p class="text-xs font-normal">{{ category.name }}</p>
             </a>

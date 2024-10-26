@@ -2,6 +2,7 @@
 {% load static %}
 {% block meta %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+<link rel="stylesheet" href="{% static 'css/category_filter.css' %}">
 {% endblock meta %}
 
 
@@ -14,12 +15,39 @@
     <main>
         <div class="flex items-center justify-center pt-90">
             <!-- Konten dengan scroll -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-0"> <!-- Menambahkan class scrollable-content -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-0 content-filtered"> <!-- Menambahkan class scrollable-content -->
                 {% include 'card_product_main.html' %}
             </div>
         </div>
     </main>
 
 
+
+<script>
+    $(document).ready(function () {
+        $(document).on('click', '.category-filter', function(e) {
+            e.preventDefault();
+
+            var category = $(this).data('category');  // Mendapatkan nama kategori dari elemen yang diklik
+            console.log(category);
+
+            $.ajax({
+                method: "GET",
+                url: "{% url 'Homepage:filter_products' %}",  // URL menuju view filter_products
+                data: { 'category': category },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        $('.content-filtered').html(response.html);  // Mengganti isi main dengan hasil yang difilter
+                    } else {
+                        alertify.error('Error: ' + response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alertify.error('Error: ' + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>    
 
 {% endblock content %}
