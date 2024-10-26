@@ -1,5 +1,6 @@
 from django.shortcuts import render, reverse, get_object_or_404
 from .models import Product, Category, Restaurant
+from Review.models import Review
 from bookmarks.models import Bookmark  # Make sure Category is imported
 from django.http import HttpResponseRedirect, JsonResponse
 from django.template.loader import render_to_string
@@ -24,15 +25,15 @@ def show_main(request):
     })
 
 def restaurant(request):
-    # Retrieve the restaurant ID from query parameters
     restaurant_name = request.GET.get('restaurant_name')
     restaurant = get_object_or_404(Restaurant, name=restaurant_name)
     products = Product.objects.filter(restaurant_name=restaurant)
-    
+    reviews = restaurant.review.all() 
     # Render the template with restaurant details, products, and categories
     return render(request, 'restaurant.html', {
         'restaurant': restaurant,
         'products': products,
+        'reviews': reviews,
     })
 
 # Filter dengan Ajax

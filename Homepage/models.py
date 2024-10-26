@@ -1,5 +1,4 @@
 from django.db import models
-from Review.models import Review
 import uuid
 
 class Category(models.Model):
