@@ -137,6 +137,7 @@ transition: transform 0.2s;
 
             // Mengambil ID produk dari input hidden
             var item_id = $(this).closest('article').find('.bookmark_id').val();
+            console.log(item_id)
             var token = $('input[name="csrfmiddlewaretoken"]').val(); // Mengambil CSRF token
 
             // Mengirim permintaan AJAX untuk menghapus bookmark

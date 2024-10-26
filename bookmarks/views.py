@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from bookmarks.models import Bookmark
-from Homepage.models import Category
+from Homepage.models import Category, Product
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
@@ -13,9 +13,29 @@ from .forms import EditNotesForm
 def show_bookmarks(request):
     bookmarks = Bookmark.objects.filter(user=request.user)
     categories = Category.objects.all()
-    context = {'bookmarks': bookmarks,
-               'categories': categories}
+    context = {
+        'bookmarks': bookmarks,
+        'categories': categories,
+        'alert': None  # Default alert is None
+    }
     return render(request, "bookmarks.html", context)
+
+def add_to_bookmarks(request):
+    if request.method == 'POST':
+        user_username = request.POST.get('user_username')
+        product_id = request.POST.get('product_id')
+        product = Product.objects.get(pk=product_id)
+
+        if Bookmark.objects.filter(user=request.user, product=product).exists():
+            item = Bookmark.objects.get(user=request.user, product=product)
+            item_name = item.product.name
+            item.delete()
+            return JsonResponse({'status': 'deleted', 'message': f"Makanan {item_name} sudah terdelete dari dalam bookmarks Anda."})
+        else:
+            Bookmark.objects.create(user=request.user, product=product)
+            return JsonResponse({'status': 'added', 'message': 'Product added to bookmarks successfully!'})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request.'})
+
 
 
 @csrf_exempt

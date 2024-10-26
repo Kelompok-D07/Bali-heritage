@@ -1,7 +1,19 @@
-from django.shortcuts import render
+from django.shortcuts import render, reverse
 from .models import Product, Category  # Make sure Category is imported
+from django.http import HttpResponseRedirect
 
 def show_main(request):
-    products = Product.objects.all()  # Display all products by default
-    categories = Category.objects.all()  # Fetch all categories to display in the template
-    return render(request, 'main.html', {'products': products, 'categories': categories})
+    category_name = request.GET.get('category')  # Get category from query parameters
+    categories = Category.objects.all()
+    
+    # Filter products by category if category_name is specified
+    if category_name:
+        products = Product.objects.filter(category__name=category_name)
+    else:
+        products = Product.objects.all()
+
+    return render(request, 'main.html', {
+        'products': products,
+        'categories': categories,
+        'selected_category': category_name,  # Pass selected category to the template
+    })
