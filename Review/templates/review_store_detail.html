@@ -6,11 +6,10 @@
 
     <!-- Tampilkan tombol edit dan delete jika review dibuat oleh user yang sedang login -->
     {% if review.user == request.user %}
-      <a href="{% url 'edit_review' review.pk %}" class="btn btn-primary">
+      <a href="{% url 'review:edit_review' review.pk %}" class="btn btn-primary">
         Edit Review
       </a>
-      <a href="{% url 'delete_review' review.pk %}" class="btn btn-danger" 
-         onclick="return confirm('Apakah kamu yakin ingin menghapus review ini?');">
+      <a href="{% url 'review:delete_review' review.pk %}" >
          Delete Review
       </a>
     {% endif %}
