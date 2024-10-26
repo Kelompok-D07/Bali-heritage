@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+#toastBox {
+    position: fixed;
+    bottom: 20px; /* Kurangi jarak dari bawah */
+    right: 20px;  /* Kurangi jarak dari kanan */
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 10px; /* Kurangi padding luar */
+}
+
+.toast {
+    position: relative;
+    width: 280px; /* Lebar lebih kecil */
+    background: #fff;
+    border-radius: 8px; /* Kurangi radius sudut */
+    padding: 10px 20px; /* Kurangi padding dalam */
+    margin: 8px 0; /* Jarak antar toast */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transform: translateX(100%);
+    animation: moveleft 0.5s ease forwards;
+    overflow: hidden; /* Menjaga elemen tetap dalam batas */
+    border-left: 4px solid #5ede50; /* Garis kiri lebih tipis */
+}
+
+.toast.deleted {
+    border-left: 4px solid #F97316; /* Warna oranye untuk error */
+}
+
+.toast .toast-content {
+    display: flex;
+    align-items: center;
+}
+
+.toast-content .check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px; /* Ukuran ikon lebih kecil */
+    width: 28px;
+    background-color: #5ede50;
+    color: #fff;
+    font-size: 16px; /* Ukuran font ikon lebih kecil */
+    border-radius: 50%;
+}
+
+.toast.deleted .check {
+    background-color: #F97316;
+}
+
+.toast-content .message {
+    display: flex;
+    flex-direction: column;
+    margin-left: 12px; /* Kurangi margin kiri */
+}
+
+.message .text.text-1 {
+    font-size: 14px; /* Ukuran font lebih kecil */
+    font-weight: 600;
+    color: #333;
+}
+
+.message .text.text-2 {
+    font-size: 12px; /* Ukuran font lebih kecil */
+    color: #666;
+}
+
+.toast .close {
+    font-size: 16px; /* Ukuran ikon close lebih kecil */
+    color: #666;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.toast .close:hover {
+    opacity: 1;
+}
+
+.toast .progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px; /* Tinggi progress bar lebih kecil */
+    width: 100%;
+    background: #ddd;
+    overflow: hidden;
+}
+
+.toast .progress::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #5ede50;
+    animation: progress 3s linear forwards;
+}
+
+.toast.deleted .progress::before {
+    background-color: #F97316;
+}
+
+@keyframes moveleft {
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes progress {
+    100% {
+        width: 0;
+    }
+}

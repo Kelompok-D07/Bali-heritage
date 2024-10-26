@@ -1,0 +1,18 @@
+.category-filter {
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Efek saat hover */
+.category-filter:hover {
+    transform: scale(1.1); /* Zoom-in efek */
+    color: #ff8c00; /* Warna saat hover */
+}
+
+/* Tambahan animasi pada gambar kategori */
+.category-filter img {
+    transition: transform 0.3s ease;
+}
+
+.category-filter:hover img {
+    transform: rotate(10deg); /* Sedikit rotasi */
+}
