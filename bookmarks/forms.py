@@ -1,7 +1,14 @@
 from django import forms
-from .models import Bookmark;
+from .models import Bookmark
 
-class AddToBookmarkForm(forms.ModelForm):
+class EditNotesForm(forms.ModelForm):
     class Meta:
         model = Bookmark
-        fields = ['notes']  # Hanya catatan yang bisa ditambahkan
+        fields = ['notes']
+        widgets = {
+            'notes': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Edit your notes'}),
+        }
+        labels = {
+            'notes': 'Edit Notes',
+        }
+    notes = forms.CharField(required=False)

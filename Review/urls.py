@@ -5,7 +5,7 @@ app_name = 'review'
 
 urlpatterns = [
     path('', show_main, name='show_main'),
-    path('create-review-entry/<uuid:restaurant_id>', create_review_entry, name='create_review_entry'),
+    path('create-review-entry/<int:restaurant_id>', create_review_entry, name='create_review_entry'),
     path('xml/', show_xml, name='show_xml'),
     path('json/', show_json, name='show_json'),
     path('xml/<str:id>/', show_xml_by_id, name='show_xml_by_id'),
