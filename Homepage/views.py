@@ -23,9 +23,10 @@ def restaurant(request):
     restaurant_name = request.GET.get('restaurant_name')
     restaurant = get_object_or_404(Restaurant, name=restaurant_name)
     products = Product.objects.filter(restaurant_name=restaurant)
-    
+    review = restaurant.review.all()
     # Render the template with restaurant details, products, and categories
     return render(request, 'restaurant.html', {
         'restaurant': restaurant,
         'products': products,
+        'reviews': review,
     })
