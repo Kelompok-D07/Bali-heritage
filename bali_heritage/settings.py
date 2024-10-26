@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'Homepage',
     'BaliLoka_stories',
     'forum',
+    
 ]
 
 MIDDLEWARE = [

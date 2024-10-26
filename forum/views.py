@@ -32,8 +32,3 @@ def forum_like(request, pk):
     else:
         forum.likes.add(request.user)
     return redirect('forum_detail', pk=pk)
-
-# forum_list: Menampilkan daftar semua forum.
-# forum_detail: Menampilkan detail forum tertentu.
-# forum_create: Mengizinkan user yang login untuk membuat forum baru.
-# forum_like: Mengizinkan user untuk memberi atau menghapus "like" pada forum
