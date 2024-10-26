@@ -11,3 +11,4 @@ class EditNotesForm(forms.ModelForm):
         labels = {
             'notes': 'Edit Notes',
         }
+    notes = forms.CharField(required=False)
