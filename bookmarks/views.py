@@ -9,6 +9,9 @@ from django.contrib.auth.decorators import login_required
 def show_bookmarks(request):
     bookmarks = Bookmark.objects.filter(user=request.user)
     categories = Category.objects.all()
-    context = {'bookmarks': bookmarks,
-               'categories': categories}
-    return render(request, "bookmarks.html", context)
+    context = {
+        'bookmarks': bookmarks,
+        'categories': categories,
+        'alert': None  # Default alert is None
+    }
+    return render(request, "bookmarks.html", context)   

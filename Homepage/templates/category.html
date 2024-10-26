@@ -1,14 +1,16 @@
 {% load static %}
 <div class="flex items-center h-24 space-x-5 justify-center bg-white w-screen">
     <div class="flex items-center space-x-10">
-        <button class="flex flex-col items-center text-gray-400 hover:text-black gap-2">
+        <!-- Link for ALL category -->
+        <a href="{% url 'Homepage:show_main' %}" class="flex flex-col items-center {% if selected_category is None %}text-black{% else %}text-gray-400{% endif %} hover:text-black gap-2">
             <p class="text-xs font-normal">ALL</p>
-        </button>
+        </a>
         {% for category in categories %}
-            <button class="flex flex-col items-center text-gray-400 hover:text-black gap-2">
+            <!-- Link for each category, passing the category name as a query parameter -->
+            <a href="{% url 'Homepage:show_main' %}?category={{ category.name }}" class="flex flex-col items-center {% if selected_category == category.name %}text-black{% else %}text-gray-400{% endif %} hover:text-black gap-2">
                 <img src="{% static 'image/food.png' %}" alt="{{ category.name }}" class="h-6 w-6"/>
                 <p class="text-xs font-normal">{{ category.name }}</p>
-            </button>
+            </a>
         {% endfor %}
     </div>
 </div>
