@@ -5,7 +5,7 @@
             <img src="{% static 'image/logo.png' %}" alt="Logo" class="h-16 w-16 mx-auto sm:mx-0"/> 
         </a>
         {% if user.is_authenticated %}
-            <span class="text-sm text-black-500 ml-2">Welcome, {{ user.username }}</span>
+            <span class="text-black-500 font-bold pt-2 ml-2 balinese-text">Welcome, {{ user.username }}</span>
         {% endif %}
     </div>
 

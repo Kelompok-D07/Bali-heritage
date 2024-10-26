@@ -1,0 +1,15 @@
+.balinese-text {
+    font-family: 'Marck Script'; /* Gaya font dengan nuansa aksara Bali */
+    font-size: 1.8rem; /* Sesuaikan ukuran teks */
+    color: #e44444; /* Warna emas untuk sentuhan tradisional */
+    /* text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); Bayangan lembut */
+    letter-spacing: 0.5px; /* Spasi huruf untuk nuansa klasik */
+    margin-left: 8px; /* Menyesuaikan jarak */
+}
+
+/* Jika ingin memberikan ornamen tambahan */
+.balinese-text::before {
+    color: #C19A6B; /* Warna ornamen */
+    font-size: 1.2em; /* Ukuran ornamen sedikit lebih besar */
+    vertical-align: middle;
+}
