@@ -41,7 +41,7 @@
                 </div>
                 <!-- View Restaurant Button -->
                 <div class="mt-3">
-                    <a href="/review" class="py-1 px-3 hover:text-blue-700 text-blue-500 font-semibold rounded-lg">View Restaurant</a>
+                    <a href="{% url 'Homepage:restaurant' %}?restaurant_name={{ product.restaurant_name }}" class="py-1 px-3 hover:text-blue-700 text-blue-500 font-semibold rounded-lg">View Restaurant</a>
                 </div>
             </div>
         </div>

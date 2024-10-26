@@ -1,13 +1,10 @@
-{% extends 'base.html' %}
-{% block content %}
-{% include 'navbar.html' %}
 {% for review in reviews %}
   <div class="review">
     <p><strong>{{ review.user.username }}</strong> memberikan rating {{ review.rating }}</p>
     <p>{{ review.comment }}</p>
     <p><small>{{ review.time }}</small></p>
 
-    <!-- Tampilkan tombol edit jika review dibuat oleh user yang sedang login -->
+    <!-- Tampilkan tombol edit dan delete jika review dibuat oleh user yang sedang login -->
     {% if review.user == request.user %}
       <a href="{% url 'edit_review' review.pk %}" class="btn btn-primary">
         Edit Review
@@ -21,5 +18,3 @@
 {% empty %}
   <p>Belum ada review.</p>
 {% endfor %}
-
-{% endblock content%}

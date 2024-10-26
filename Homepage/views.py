@@ -1,5 +1,5 @@
-from django.shortcuts import render, reverse
-from .models import Product, Category  # Make sure Category is imported
+from django.shortcuts import render, reverse, get_object_or_404
+from .models import Product, Category, Restaurant  # Make sure Category is imported
 from django.http import HttpResponseRedirect
 
 def show_main(request):
@@ -16,4 +16,16 @@ def show_main(request):
         'products': products,
         'categories': categories,
         'selected_category': category_name,  # Pass selected category to the template
+    })
+
+def restaurant(request):
+    # Retrieve the restaurant ID from query parameters
+    restaurant_name = request.GET.get('restaurant_name')
+    restaurant = get_object_or_404(Restaurant, name=restaurant_name)
+    products = Product.objects.filter(restaurant_name=restaurant)
+    
+    # Render the template with restaurant details, products, and categories
+    return render(request, 'restaurant.html', {
+        'restaurant': restaurant,
+        'products': products,
     })

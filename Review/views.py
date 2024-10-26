@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from Review.models import Review
 from Review.forms import ReviewForm
+from Homepage.models import Restaurant
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core import serializers
 
@@ -16,22 +18,33 @@ def show_main(request):
 
     return render(request, "main.html", context)
 
-def create_review_entry(request):
+def create_review_entry(request, restaurant_id):
+    # Pastikan user sudah login
+    if not request.user.is_authenticated:
+        return redirect('login')  # Sesuaikan dengan URL login kamu
+    
+    restaurant = get_object_or_404(Restaurant, id=restaurant_id)
+    # Form handling
     form = ReviewForm(request.POST or None)
-
     if form.is_valid() and request.method == "POST":
         review = form.save(commit=False)
         review.user = request.user
-        form.save()
-        return redirect('main:show_main')
+        review.restaurant = restaurant
+        review.save()
 
-    context = {'form': form}
-    return render(request, "review.html", context)
+        # Redirect ke halaman detail restoran
+        return redirect('Homepage:restaurant', restaurant_name = restaurant.name)
+
+    return render(request, "create_review_entry.html", {'form': form, 'restaurant': restaurant})
 
 def review_store_detail(request, id):
     # Ambil review yang terkait dengan store tertentu
+    restaurant = get_object_or_404(Restaurant, pk=id)
     reviews = Review.objects.filter(pk=id)
-    return render(request, 'review_store_detail.html', {'reviews': reviews})
+    return render(request, 'restaurant.html', {
+        'restaurant': restaurant,
+        'reviews': reviews
+    })
 
 def show_xml(request):
     data = Review.objects.all()
@@ -55,7 +68,7 @@ def edit_review(request, id):
 
     # Pastikan hanya user yang menulis review bisa mengeditnya
     if review.user != request.user:
-        return redirect('review_store_detail', pk=review.id)
+        return redirect('review_store_detail', pk=id)
 
     if form.is_valid() and request.method == "POST":
         # Simpan form dan kembali ke halaman awal
@@ -73,11 +86,11 @@ def delete_review(request, id):
 
     # Pastikan hanya user yang membuat review bisa menghapusnya
     if review.user != request.user:
-        return redirect('review_store_detail', pk=review.id)
+        return redirect('review_store_detail', pk=id)
 
     if request.method == 'POST':
         review.delete()
-        return redirect('review_store_detail', pk=review.id)
+        return redirect('review_store_detail', pk=id)
 
 @csrf_exempt
 @require_POST
