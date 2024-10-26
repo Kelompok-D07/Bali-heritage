@@ -1,22 +1,56 @@
 {% extends 'base.html' %}
-
 {% load static %}
 
+{% block meta %}
+{% include 'navbar.html' %}
+<title>Edit Product</title>
+{% endblock meta %}
+
 {% block content %}
+<div class="flex flex-col min-h-screen bg-gray-50">
+  <div class="container mx-auto px-4 py-8 mt-4 max-w-xl">
+    <h1 class="text-3xl font-bold text-center mb-8 text-orange-600">
+      Edit Product
+    </h1>
 
-<h1>Edit Mood</h1>
-
-<form method="POST">
-    {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-        <tr>
-            <td></td>
-            <td>
-                <input type="submit" value="Edit stories"/>
-            </td>
-        </tr>
-    </table>
-</form>
-
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <form method="POST" class="space-y-6" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="flex flex-col">
+          <label
+            for="{{ field.id_for_label }}"
+            class="mb-2 font-semibold text-orange-700"
+          >
+            {{ field.label }}
+          </label>
+          <div class="w-full">
+            {{ field }}
+            {% comment %} <input
+              type="{{ field.field.widget.input_type }}"
+              name="{{ field.name }}"
+              value="{{ field.value|default_if_none:'' }}"
+              class="border-2 border-orange-300 rounded-md p-2 w-full focus:outline-none focus:border-orange-500"
+            /> {% endcomment %}
+          </div>
+          {% if field.help_text %}
+          <p class="mt-1 text-sm text-gray-500">{{ field.help_text }}</p>
+          {% endif %}
+          {% for error in field.errors %}
+          <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+          {% endfor %}
+        </div>
+        {% endfor %}
+        <div class="flex justify-center mt-6">
+          <button
+            type="submit"
+            class="bg-orange-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-orange-600 transition duration-300 ease-in-out w-full"
+          >
+            Edit Product
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}

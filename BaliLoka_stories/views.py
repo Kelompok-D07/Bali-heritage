@@ -68,12 +68,18 @@ def edit_stories(request, id):
     if form.is_valid() and request.method == "POST":
         # Simpan form dan kembali ke halaman awal
         form.save()
-        return HttpResponseRedirect(reverse('BaliLoka_stories:show_main'))
+        return HttpResponseRedirect(reverse('BaliLoka_stories:show_stories'))
 
     context = {'form': form}
     return render(request, "edit_stories.html", context)
 
-
+def delete_stories(request, id):
+    # Get mood berdasarkan id
+    stories_entries = StoriesEntry.objects.get(pk = id)
+    # Hapus mood
+    stories_entries.delete()
+    # Kembali ke halaman awal
+    return HttpResponseRedirect(reverse('BaliLoka_stories:show_stories'))
 
 def show_xml(request):
     data = StoriesEntry.objects.all()
