@@ -116,7 +116,7 @@
                 alert('Registration successful!');
                 hidePopup('registerPopup');
                 document.cookie = "auth=true";  // Set cookie for login state
-                checkAuthState();  // Update button visibility
+                checkAuthState();  // Update button visibilityf
             } else {
                 alert(data.error);
             }
@@ -139,6 +139,7 @@
                 hidePopup('loginPopup');
                 document.cookie = "auth=true";  // Set cookie for login state
                 checkAuthState();  // Update button visibility
+                window.location.reload();
             } else {
                 alert(data.error);
             }
