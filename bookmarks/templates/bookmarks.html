@@ -132,25 +132,25 @@ transition: transform 0.2s;
 
 <script>
     $(document).ready(function () {
-        // Gunakan event delegation untuk .delete-button
+        // Handle untuk delete Button
         $(document).on('click', '.delete-button', function(e) {
-            e.preventDefault(); // Mencegah aksi default
+            e.preventDefault();
 
             // Mengambil ID produk dari input hidden
             var item_id = $(this).closest('article').find('.bookmark_id').val();
             console.log(item_id)
             var token = $('input[name="csrfmiddlewaretoken"]').val(); // Mengambil CSRF token
 
-            // Mengirim permintaan AJAX untuk menghapus bookmark
+            // Untuk permintaan Ajax
             $.ajax({
                 method: "POST",
                 url: "{% url 'bookmarks:delete_bookmarks_item' item_id=0 %}".replace("0", item_id), // Menggunakan item_id
                 data: {
                     'item_id': item_id,
-                    csrfmiddlewaretoken: token // Menyertakan CSRF token
+                    csrfmiddlewaretoken: token
                 },
                 success: function(response) {
-                    showToast("Added","Product deleted from bookmarks", false); // Menampilkan pesan sukses
+                    showToast("Added","Product deleted from bookmarks", false);
                     $('.bookmarksdata').load(location.href + " .bookmarksdata");
                 },
                 error: function(xhr, status, error) {
@@ -159,16 +159,17 @@ transition: transform 0.2s;
             });
         });
 
-
+        // Handle filter kategori
         $(document).on('click', '.category-filter', function(e) {
             e.preventDefault();
 
-            var category = $(this).data('category');  // Mendapatkan nama kategori dari elemen yang diklik
+            var category = $(this).data('category');
             console.log(category);
 
+            // Untuk permintaan Ajax
             $.ajax({
                 method: "GET",
-                url: "{% url 'bookmarks:filter_bookmarks' %}",  // URL menuju view filter_bookmarks
+                url: "{% url 'bookmarks:filter_bookmarks' %}", 
                 data: { 'category': category },
                 success: function(response) {
                     if (response.status === 'success') {
@@ -184,7 +185,7 @@ transition: transform 0.2s;
         });
 
 
-
+        // Handle edit notes
         $(document).on('click', '.edit-notes-button', function () {
             var bookmarkId = $(this).data('id');
             var currentNotes = $(this).data('notes');
@@ -199,7 +200,7 @@ transition: transform 0.2s;
             $('#editNotesModal').addClass('hidden');
         });
 
-        // Submit form Edit Notes dengan AJAX
+        // Handle submit edit form
         $('#editNotesForm').submit(function (e) {
             e.preventDefault();
             var bookmarkId = $('#bookmark_id').val();

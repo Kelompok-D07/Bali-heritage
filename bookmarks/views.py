@@ -13,14 +13,14 @@ from django.template.loader import render_to_string
 
 @login_required(login_url='/')
 def show_bookmarks(request):
-    selected_category = request.GET.get("category", None)  # Get category from query parameters
+    selected_category = request.GET.get("category", None)
     bookmarks = Bookmark.objects.filter(user=request.user)
     categories = Category.objects.all()
     context = {
         'bookmarks': bookmarks,
         'categories': categories,
         'selected_category': selected_category,
-        'alert': None  # Default alert is None
+        'alert': None
     }
     return render(request, "bookmarks.html", context)
 
@@ -60,16 +60,14 @@ def delete_bookmarks_item(request, item_id):
 
 @login_required(login_url='/')
 def filter_bookmarks(request):
-    if request.method == 'GET':  # Memeriksa jika permintaan adalah AJAX
-        category_name = request.GET.get('category')  # Mengambil nama kategori dari permintaan AJAX
+    if request.method == 'GET':
+        category_name = request.GET.get('category')
         
-        # Filter bookmarks berdasarkan kategori yang dipilih
         if category_name:
             bookmarks = Bookmark.objects.filter(user=request.user, product__category__name=category_name)
         else:
-            bookmarks = Bookmark.objects.filter(user=request.user)  # Jika kategori kosong, tampilkan semua
+            bookmarks = Bookmark.objects.filter(user=request.user)
         
-        # Render ulang template dengan bookmarks yang difilter
         html = render_to_string('card_product.html', {'bookmarks': bookmarks}, request=request)
         return JsonResponse({'status': 'success', 'html': html})  # Mengembalikan HTML yang difilter
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
