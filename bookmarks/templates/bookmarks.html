@@ -57,7 +57,7 @@ transition: transform 0.2s;
 
 {% block content %}
 {% include 'navbar.html' %}
-{% include 'category.html' %}
+{% include 'category_bookmarks.html' %}
 
 <div class="flex items-center justify-center pt-90 bookmarksdata">
     <div class="bg-white rounded-lg" style="width: 1200px; height: 500px; box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;">
@@ -67,7 +67,7 @@ transition: transform 0.2s;
         </div>
 
         <!-- Konten dengan scroll -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-0 scrollable-content"> <!-- Menambahkan class scrollable-content -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-0 scrollable-content content-filtered"> <!-- Menambahkan class scrollable-content -->
             {% include 'card_product.html' %}
         </div>
     </div>
@@ -157,6 +157,31 @@ transition: transform 0.2s;
                 }
             });
         });
+
+
+        $(document).on('click', '.category-filter', function(e) {
+            e.preventDefault();
+
+            var category = $(this).data('category');  // Mendapatkan nama kategori dari elemen yang diklik
+            console.log(category);
+
+            $.ajax({
+                method: "GET",
+                url: "{% url 'bookmarks:filter_bookmarks' %}",  // URL menuju view filter_bookmarks
+                data: { 'category': category },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        $('.content-filtered').html(response.html);  // Mengganti isi bookmarksdata dengan hasil yang difilter
+                    } else {
+                        alertify.error('Error: ' + response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alertify.error('Error: ' + xhr.responseText);
+                }
+            });
+        });
+
 
 
         $(document).on('click', '.edit-notes-button', function () {

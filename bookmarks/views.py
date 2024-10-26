@@ -6,6 +6,8 @@ from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from .forms import EditNotesForm
+from django.template.loader import render_to_string
+
 
 
 
@@ -52,6 +54,23 @@ def delete_bookmarks_item(request, item_id):
         else:
             return JsonResponse({'status': "Login to continue"}, status=403)
     return JsonResponse({'status': "Invalid request method"}, status=400)
+
+
+@login_required(login_url='/')
+def filter_bookmarks(request):
+    if request.method == 'GET':  # Memeriksa jika permintaan adalah AJAX
+        category_name = request.GET.get('category')  # Mengambil nama kategori dari permintaan AJAX
+        
+        # Filter bookmarks berdasarkan kategori yang dipilih
+        if category_name:
+            bookmarks = Bookmark.objects.filter(user=request.user, product__category__name=category_name)
+        else:
+            bookmarks = Bookmark.objects.filter(user=request.user)  # Jika kategori kosong, tampilkan semua
+        
+        # Render ulang template dengan bookmarks yang difilter
+        html = render_to_string('card_product.html', {'bookmarks': bookmarks}, request=request)
+        return JsonResponse({'status': 'success', 'html': html})  # Mengembalikan HTML yang difilter
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
 
 @csrf_exempt

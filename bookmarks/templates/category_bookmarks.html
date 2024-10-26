@@ -1,0 +1,15 @@
+{% load static %}
+<div class="flex items-center h-24 space-x-5 justify-center bg-white w-screen">
+    <div class="flex items-center space-x-10">
+        <!-- Filter untuk Semua Kategori -->
+        <a href="#" class="category-filter" data-category="" class="flex flex-col items-center text-black hover:text-black gap-2">
+            <p class="text-xs font-normal">ALL</p>
+        </a>
+        {% for category in categories %}
+            <a href="#" class="category-filter" data-category="{{ category.name }}" class="flex flex-col items-center text-gray-400 hover:text-black gap-2">
+                <img src="{% static 'image/food.png' %}" alt="{{ category.name }}" class="h-6 w-6"/>
+                <p class="text-xs font-normal">{{ category.name }}</p>
+            </a>
+        {% endfor %}
+    </div>
+</div>
