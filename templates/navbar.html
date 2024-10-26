@@ -1,17 +1,17 @@
 {% load static %}
-<div class="grid grid-cols-1 sm:grid-cols-3 px-4 sm:px-16 w-full h-20 border-b border-gray-300 items-center">
-    <a href="/home">
+<div class="grid grid-cols-1 sm:grid-cols-3 px-4 sm:px-16 w-full h-20 border-b border-gray-300 items-center bg-white">
+    <a href="/">
         <img src="{% static 'image/logo.png' %}" alt="Logo" class="h-16 w-16 mx-auto sm:mx-0"/> 
     </a>
     <div class="flex justify-evenly items-center border rounded-full shadow-md h-12 w-full sm:w-72 mx-2">
         <a href="/stories" class="border-r-2 text-sm font-medium px-6">Our Stories</a>
-        <a href="#" class="text-sm font-medium px-4">Forums</a>
+        <a href="/forums" class="text-sm font-medium px-4">Forums</a>
         <button class="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center">
             <i class="fa-solid fa-magnifying-glass"></i>
         </button>
     </div>
     <div class="flex justify-end items-center gap-4">
-        <a href="#" class="text-sm font-medium">Your Bookmarks</a>
+        <a href="/bookmarks" class="text-sm font-medium">Your Bookmarks</a>
         
         <div class="relative">
             <button id="dropdownButton" class="flex justify-evenly items-center gap-2 rounded-full border shadow-md h-10 w-20 py-1.25 pr-1.25 pl-2 hover:shadow-lg transition-shadow duration-200" onclick="toggleDropdown()">
@@ -19,27 +19,148 @@
                 <span class="bg-black text-white rounded-full text-center w-7 h-7 text-[10px] font-semibold flex items-center justify-center">E</span>
             </button>
 
-            <div id="dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-10">
-                <a href="/register" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Register</a>
-                <a href="/login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Login</a>
+            <div id="dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg">
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" id="registerLink" onclick="showPopup('registerPopup')">Register</a>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" id="loginLink" onclick="showPopup('loginPopup')">Login</a>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hidden" id="logoutLink">Logout</a>
             </div>
         </div>
+    </div>
+</div>
+
+<div id="registerPopup" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white rounded-lg p-6 w-80 relative">
+        <!-- Close Button -->
+        <button onclick="hidePopup('registerPopup')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <h2 class="text-lg font-bold mb-4">Register</h2>
+        <form id="registerForm">
+            <input type="text" name="username" placeholder="Username" required class="border p-2 mb-2 w-full rounded"/>
+            <input type="password" name="password" placeholder="Password" required class="border p-2 mb-2 w-full rounded"/>
+            <button type="submit" class="bg-orange-500 text-white p-2 rounded w-full hover:bg-orange-700">Register</button>
+        </form>
+    </div>
+</div>
+
+<div id="loginPopup" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white rounded-lg p-6 w-80 relative">
+        <!-- Close Button -->
+        <button onclick="hidePopup('loginPopup')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <h2 class="text-lg font-bold mb-4">Login</h2>
+        <form id="loginForm">
+            <input type="text" name="username" placeholder="Username" required class="border p-2 mb-2 w-full rounded"/>
+            <input type="password" name="password" placeholder="Password" required class="border p-2 mb-2 w-full rounded"/>
+            <button type="submit" class="bg-orange-500 text-white p-2 rounded w-full hover:bg-orange-700">Login</button>
+        </form>
     </div>
 </div>
 
 <script>
     function toggleDropdown() {
         const dropdown = document.getElementById('dropdown');
-        dropdown.classList.toggle('hidden'); // Toggle the dropdown visibility
+        dropdown.classList.toggle('hidden');
     }
 
-    // Optional: Close the dropdown if clicked outside
-    window.onclick = function(event) {
-        if (!event.target.matches('#dropdownButton')) {
-            const dropdown = document.getElementById('dropdown');
-            if (!dropdown.classList.contains('hidden')) {
-                dropdown.classList.add('hidden');
+    // Toggle popup visibility
+    function showPopup(popupId) {
+        document.getElementById(popupId).classList.remove('hidden');
+    }
+
+    function hidePopup(popupId) {
+        document.getElementById(popupId).classList.add('hidden');
+    }
+
+    // Check cookie for authentication state
+    function checkAuthState() {
+        const cookieArr = document.cookie.split(";");
+
+        let isLoggedIn = false; // Variable to track if the user is logged in
+
+        for (let i = 0; i < cookieArr.length; i++) {
+            const cookiePair = cookieArr[i].trim().split("="); 
+            if (cookiePair[0] === "auth" && cookiePair[1] === "true") {
+                isLoggedIn = true; // User is logged in
+                break;
             }
         }
+
+        // Show/hide buttons based on authentication state
+        if (isLoggedIn) {
+            document.getElementById("logoutLink").classList.remove("hidden");
+            document.getElementById("loginLink").classList.add("hidden");
+            document.getElementById("registerLink").classList.add("hidden");
+        } else {
+            document.getElementById("logoutLink").classList.add("hidden");
+            document.getElementById("loginLink").classList.remove("hidden");
+            document.getElementById("registerLink").classList.remove("hidden");
+        }
     }
+
+    // Handle form submissions
+    document.getElementById('registerForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+
+        fetch('/auth/register/', {
+            method: 'POST',
+            body: formData,
+            headers: {'X-CSRFToken': '{{ csrf_token }}'}
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Registration successful!');
+                hidePopup('registerPopup');
+                document.cookie = "auth=true";  // Set cookie for login state
+                checkAuthState();  // Update button visibility
+            } else {
+                alert(data.error);
+            }
+        });
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+
+        fetch('/auth/login/', {
+            method: 'POST',
+            body: formData,
+            headers: {'X-CSRFToken': '{{ csrf_token }}'}
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Login successful!');
+                hidePopup('loginPopup');
+                document.cookie = "auth=true";  // Set cookie for login state
+                checkAuthState();  // Update button visibility
+            } else {
+                alert(data.error);
+            }
+        });
+    });
+
+    document.getElementById('logoutLink').addEventListener('click', function(event) {
+        event.preventDefault();
+
+        fetch('/auth/logout/', {
+            method: 'POST',
+            headers: {'X-CSRFToken': '{{ csrf_token }}'}
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Logged out successfully!');
+                document.cookie = "auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                checkAuthState();  // Update button visibility
+            }
+        });
+    });
+
+    // Check authentication state on page load
+    document.addEventListener('DOMContentLoaded', checkAuthState);
 </script>
