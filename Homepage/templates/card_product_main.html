@@ -99,9 +99,10 @@
                     success: function (response) {
                         if(response.status == 'added') {
                             console.log("TERTAMBAHKAN")
+                            showToast("Added", "Product added to bookmarks", true)
                         }
                         else if (response.status == 'deleted') {
-                            console.log("TERDELETE")
+                            showToast("Deleted","Product deleted from bookmarks", false)
                         }
                     }
                 });

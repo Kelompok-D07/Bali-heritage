@@ -1,4 +1,10 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block meta %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+{% endblock meta %}
+
+
 {% block content %}
     <div class="header">
         {% include 'navbar.html' %}
@@ -15,7 +21,5 @@
     </main>
 
 
-<script>
 
-</script>
 {% endblock content %}

@@ -149,7 +149,7 @@ transition: transform 0.2s;
                     csrfmiddlewaretoken: token // Menyertakan CSRF token
                 },
                 success: function(response) {
-                    alertify.success(response.status); // Menampilkan pesan sukses
+                    showToast("Added","Product deleted from bookmarks", false); // Menampilkan pesan sukses
                     $('.bookmarksdata').load(location.href + " .bookmarksdata");
                 },
                 error: function(xhr, status, error) {
@@ -189,7 +189,7 @@ transition: transform 0.2s;
                 },
                 success: function (response) {
                     if (response.status === 'success') {
-                        alertify.success('Notes updated successfully');
+                        showToast("Updated", "Berhasil memperbarui notes", true);
                         $('#editNotesModal').addClass('hidden');
                         $('.bookmarksdata').load(location.href + " .bookmarksdata"); // Refresh data
                     } else {
