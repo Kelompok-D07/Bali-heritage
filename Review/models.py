@@ -1,4 +1,5 @@
 from django.db import models
+from Homepage.models import Restaurant
 from django.contrib.auth.models import User
 import datetime
 import uuid
@@ -9,6 +10,7 @@ class Review(models.Model):
     rating = models.IntegerField()
     comment = models.TextField()
     time = models.DateField(default=datetime.date.today)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='review',null=True)
 
     def __str__(self):
         return f'{self.user.username} - {self.rating}'

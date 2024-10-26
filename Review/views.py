@@ -21,7 +21,7 @@ def show_main(request):
 def create_review_entry(request, restaurant_id):
     # Pastikan user sudah login
     if not request.user.is_authenticated:
-        return redirect('login')  # Sesuaikan dengan URL login kamu
+        return redirect('Homepage:main') 
     
     restaurant = get_object_or_404(Restaurant, id=restaurant_id)
     # Form handling
@@ -31,16 +31,18 @@ def create_review_entry(request, restaurant_id):
         review.user = request.user
         review.restaurant = restaurant
         review.save()
-
-        # Redirect ke halaman detail restoran
-        return redirect('Homepage:restaurant', restaurant_name = restaurant.name)
+        url = reverse('Homepage:restaurant') + f'?restaurant_name={restaurant.name}'
+    
+        # Redirect ke URL dengan query string
+        return redirect(url)
 
     return render(request, "create_review_entry.html", {'form': form, 'restaurant': restaurant})
 
 def review_store_detail(request, id):
     # Ambil review yang terkait dengan store tertentu
     restaurant = get_object_or_404(Restaurant, pk=id)
-    reviews = Review.objects.filter(pk=id)
+    reviews = restaurant.review.all()
+    print(reviews.values())
     return render(request, 'restaurant.html', {
         'restaurant': restaurant,
         'reviews': reviews
@@ -65,16 +67,17 @@ def show_json_by_id(request, id):
 def edit_review(request, id):
     # Get review berdasarkan id
     review = get_object_or_404(Review, pk=id)
+    restaurant = review.restaurant
 
     # Pastikan hanya user yang menulis review bisa mengeditnya
     if review.user != request.user:
-        return redirect('review_store_detail', pk=id)
+        return redirect('Homepage:restaurant', pk=id)
 
+    form = ReviewForm(request.POST or None, instance=review)
     if form.is_valid() and request.method == "POST":
-        # Simpan form dan kembali ke halaman awal
-        form = ReviewForm(request.POST or None, instance=review)
         form.save()
-        return HttpResponseRedirect(reverse('main:show_main'))
+        url = reverse('Homepage:restaurant') + f'?restaurant_name={restaurant.name}'
+        return redirect(url)
     
     else:
         form = ReviewForm(instance=review)
@@ -83,14 +86,14 @@ def edit_review(request, id):
 
 def delete_review(request, id):
     review = get_object_or_404(Review, pk=id)
+    restaurant = review.restaurant
 
     # Pastikan hanya user yang membuat review bisa menghapusnya
     if review.user != request.user:
-        return redirect('review_store_detail', pk=id)
-
-    if request.method == 'POST':
-        review.delete()
-        return redirect('review_store_detail', pk=id)
+        return redirect('Homepage:restaurant', pk=id)
+    review.delete()
+    url = reverse('Homepage:restaurant') + f'?restaurant_name={restaurant.name}'
+    return HttpResponseRedirect(url)
 
 @csrf_exempt
 @require_POST
