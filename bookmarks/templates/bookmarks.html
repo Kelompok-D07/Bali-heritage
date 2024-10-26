@@ -1,60 +1,68 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block meta %}
+
+<!-- ALERTIFY JS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.min.css"/>
+<!-- Default theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.min.css"/>
+
+
 <style>
-    /* Styling untuk scrollbar */
-    .scrollable-content::-webkit-scrollbar {
-        width: 12px; /* Lebar scrollbar */
-    }
+/* Styling untuk scrollbar */
+.scrollable-content::-webkit-scrollbar {
+    width: 12px; /* Lebar scrollbar */
+}
 
-    .scrollable-content::-webkit-scrollbar-track {
-        background: #f1f1f1; /* Warna latar belakang track scrollbar */
-        border-radius: 10px; /* Membulatkan sudut track */
-    }
+.scrollable-content::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Warna latar belakang track scrollbar */
+    border-radius: 10px; /* Membulatkan sudut track */
+}
 
-    .scrollable-content::-webkit-scrollbar-thumb {
-        background: #888; /* Warna thumb scrollbar */
-        border-radius: 10px; /* Membulatkan sudut thumb */
-    }
+.scrollable-content::-webkit-scrollbar-thumb {
+    background: #888; /* Warna thumb scrollbar */
+    border-radius: 10px; /* Membulatkan sudut thumb */
+}
 
-    .scrollable-content::-webkit-scrollbar-thumb:hover {
-        background: orange; /* Warna thumb saat hover */
-    }
+.scrollable-content::-webkit-scrollbar-thumb:hover {
+    background: orange; /* Warna thumb saat hover */
+}
 
-    /* Mengatur tinggi dari konten scroll */
-    .scrollable-content {
-        height: calc(490px - 80px); /* Menyesuaikan tinggi dengan mengurangi tinggi header dan garis batas */
-        overflow-y: auto; /* Memungkinkan scroll vertikal */
-        padding-bottom: 0px; /* Menambahkan padding bawah untuk mencegah konten terpotong */
-    }
+/* Mengatur tinggi dari konten scroll */
+.scrollable-content {
+    height: calc(490px - 80px); /* Menyesuaikan tinggi dengan mengurangi tinggi header dan garis batas */
+    overflow-y: auto; /* Memungkinkan scroll vertikal */
+    padding-bottom: 0px; /* Menambahkan padding bawah untuk mencegah konten terpotong */
+}
 
-    .delete-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.2s;
-    }
+.delete-button {
+background: none;
+border: none;
+cursor: pointer;
+transition: transform 0.2s;
+}
 
-    .delete-button svg {
-        fill: red; /* Warna ikon delete */
-        width: 30px;
-        height: 30px;
-    }
+.delete-button svg {
+    fill: red; /* Warna ikon delete */
+    width: 30px;
+    height: 30px;
+}
 
-    .delete-button:hover {
-        transform: scale(1.1); /* Efek zoom saat hover */
-    }
-    
+.delete-button:hover {
+    transform: scale(1.1); /* Efek zoom saat hover */
+}
 </style>
+
 {% endblock meta %}
 
 {% block content %}
 {% include 'navbar.html' %}
 {% include 'category.html' %}
 
-<div class="flex items-center justify-center pt-90">
+<div class="flex items-center justify-center pt-90 bookmarksdata">
     <div class="bg-white rounded-lg" style="width: 1200px; height: 500px; box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;">
         <div class="box-header sticky top-0 bg-white z-10 p-6">
-            <h2 class="text-2xl font-bold mb-2">Udin's Bookmarks</h2>
+            <h2 class="text-2xl font-bold mb-2">{{ request.user.username }}'s Bookmarks</h2>
             <hr class="border-gray-300 p-0"> <!-- Garis batas -->
         </div>
 
@@ -64,5 +72,137 @@
         </div>
     </div>
 </div>
+
+
+<!-- Modal Form untuk Edit Notes -->
+<div id="editNotesModal" class="hidden fixed inset-0 flex items-center justify-center z-10 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen px-4 text-center">
+        <div class="fixed inset-0 bg-gray-500 opacity-75"></div>
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all max-w-2xl w-full p-6 relative">
+
+            <!-- Title -->
+            <h3 class="text-2xl font-bold leading-6 text-gray-800 text-center mb-4">Edit Your Notes</h3>
+
+            <!-- Form -->
+            <form id="editNotesForm" class="space-y-6">
+                {% csrf_token %}
+                <input type="hidden" id="bookmark_id" name="bookmark_id">
+
+                <!-- Input Notes -->
+                <div class="relative">
+                    <label for="notes" class="block text-sm font-medium text-gray-700 text-center">Your Notes</label>
+                    <div class="mt-1 flex justify-center">
+                        <input 
+                            id="edit_notes_input" 
+                            name="notes" 
+                            class="form-control w-full max-w-lg px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all" 
+                            maxlength="49" 
+                            placeholder="Enter your notes here..." 
+                            required>
+                    </div>
+                    <small class="block text-center text-gray-500 mt-1">Maximum 50 karakter ( termasuk spasi )</small>
+                </div>
+
+                <!-- Buttons save dan cancel -->
+                <div class="flex justify-center space-x-4">
+                    <button type="submit" class="px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:bg-blue-700 transition-all">
+                        Save
+                    </button>
+                    <button type="button" class="px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 focus:bg-gray-700 transition-all" id="closeModal">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
+<script> 
+    alertify.set('notifier','position', 'top-right');
+    alertify.set('notifier','delay', 1);
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        // Gunakan event delegation untuk .delete-button
+        $(document).on('click', '.delete-button', function(e) {
+            e.preventDefault(); // Mencegah aksi default
+
+            // Mengambil ID produk dari input hidden
+            var item_id = $(this).closest('article').find('.bookmark_id').val();
+            console.log(item_id)
+            var token = $('input[name="csrfmiddlewaretoken"]').val(); // Mengambil CSRF token
+
+            // Mengirim permintaan AJAX untuk menghapus bookmark
+            $.ajax({
+                method: "POST",
+                url: "{% url 'bookmarks:delete_bookmarks_item' item_id=0 %}".replace("0", item_id), // Menggunakan item_id
+                data: {
+                    'item_id': item_id,
+                    csrfmiddlewaretoken: token // Menyertakan CSRF token
+                },
+                success: function(response) {
+                    alertify.success(response.status); // Menampilkan pesan sukses
+                    $('.bookmarksdata').load(location.href + " .bookmarksdata");
+                },
+                error: function(xhr, status, error) {
+                    alertify.error('Error: ' + xhr.responseText);
+                }
+            });
+        });
+
+
+        $(document).on('click', '.edit-notes-button', function () {
+            var bookmarkId = $(this).data('id');
+            var currentNotes = $(this).data('notes');
+            
+            $('#bookmark_id').val(bookmarkId);
+            $('#edit_notes_input').val(currentNotes);
+            $('#editNotesModal').removeClass('hidden'); // Show modal
+        });
+
+        // Tutup modal
+        $('#closeModal').click(function () {
+            $('#editNotesModal').addClass('hidden');
+        });
+
+        // Submit form Edit Notes dengan AJAX
+        $('#editNotesForm').submit(function (e) {
+            e.preventDefault();
+            var bookmarkId = $('#bookmark_id').val();
+            var notes = $('#edit_notes_input').val();
+            var token = $('input[name="csrfmiddlewaretoken"]').val();
+
+            $.ajax({
+                method: 'POST',
+                url: '/bookmarks/edit-notes/' + bookmarkId + '/',
+                data: {
+                    'notes': notes,
+                    'csrfmiddlewaretoken': token
+                },
+                success: function (response) {
+                    if (response.status === 'success') {
+                        alertify.success('Notes updated successfully');
+                        $('#editNotesModal').addClass('hidden');
+                        $('.bookmarksdata').load(location.href + " .bookmarksdata"); // Refresh data
+                    } else {
+                        alertify.error('Error: ' + response.errors);
+                    }
+                }
+            });
+        });
+
+    });
+</script>
+
+
+
 
 {% endblock content %}
