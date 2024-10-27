@@ -80,20 +80,10 @@
 
     // Check cookie for authentication state
     function checkAuthState() {
-        const cookieArr = document.cookie.split(";");
-
-        let isLoggedIn = false; // Variable to track if the user is logged in
-
-        for (let i = 0; i < cookieArr.length; i++) {
-            const cookiePair = cookieArr[i].trim().split("="); 
-            if (cookiePair[0] === "auth" && cookiePair[1] === "true") {
-                isLoggedIn = true; // User is logged in
-                break;
-            }
-        }
+        const isLoggedIn = "{{ user.is_authenticated }}"; // Use Django template tag to get user state
 
         // Show/hide buttons based on authentication state
-        if (isLoggedIn) {
+        if (isLoggedIn === "True") {
             document.getElementById("logoutLink").classList.remove("hidden");
             document.getElementById("loginLink").classList.add("hidden");
             document.getElementById("registerLink").classList.add("hidden");
@@ -119,7 +109,7 @@
             if (data.success) {
                 alert('Registration successful!');
                 hidePopup('registerPopup');
-                document.cookie = "auth=true";  // Set cookie for login state
+                // Do not set the 'auth' cookie here
                 checkAuthState();  // Update button visibility
             } else {
                 alert(data.error);
@@ -141,7 +131,9 @@
             if (data.success) {
                 alert('Login successful!');
                 hidePopup('loginPopup');
-                document.cookie = "auth=true";  // Set cookie for login state
+
+                // Set the 'auth' cookie after successful login
+                document.cookie = "auth=true; path=/; max-age=" + 60 * 60 * 24;
                 checkAuthState();  // Update button visibility
                 window.location.reload();
             } else {
@@ -170,15 +162,14 @@
 
     // Check authentication state on page load
     document.addEventListener('DOMContentLoaded', checkAuthState);
+
     function checkLogin() {
-        // Check for a cookie or any other way to determine if the user is logged in
-        const isLoggedIn = document.cookie.split(';').some(item => item.trim().startsWith('auth='));
+        const isLoggedIn = document.cookie.split(';').some(item => item.trim().startsWith('auth=true'));
 
         if (!isLoggedIn) {
             alert("You need to log in first.");
             showPopup('loginPopup');
         } else {
-            // Redirect to bookmarks page
             window.location.href = '/bookmarks/';
         }
     }
