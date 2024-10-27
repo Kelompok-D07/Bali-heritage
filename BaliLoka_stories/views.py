@@ -71,6 +71,7 @@ def show_xml(request):
 
 def show_xml(request):
     data = StoriesEntry.objects.all()
+    data = StoriesEntry.objects.all()
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
 
 def show_json(request):

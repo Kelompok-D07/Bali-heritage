@@ -13,11 +13,8 @@ def register_user(request):
         if User.objects.filter(username=username).exists():
             return JsonResponse({"success": False, "error": "Username already exists."})
         
-        user = User.objects.create_user(username=username, password=password)
-        login(request, user)
-        response = JsonResponse({"success": True})
-        response.set_cookie("auth", "true")
-        return response
+        User.objects.create_user(username=username, password=password)
+        return JsonResponse({"success": True})
 
 @csrf_exempt
 def login_user(request):

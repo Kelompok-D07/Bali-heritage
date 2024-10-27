@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('Homepage.urls')),
     path('stories/', include('BaliLoka_stories.urls')),
+    path('forum/', include('forum.urls', namespace='forum')),
     path('review/',include('Review.urls')),
     path('bookmarks/', include('bookmarks.urls')),
     path('auth/', include('authentication.urls')),  # Include the authentication URLs
