@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include 'navbar.html' %}
+<div class="container" style="width: 90%; max-width: 1200px; margin: 20px auto;">
+    <!-- Restaurant Header -->
+    <header class="restaurant-header" style="display: flex; align-items: center; margin-bottom: 20px; padding: 20px; background-color: #fff7e6; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <img src="{{ restaurant.image.url }}" alt="{{ restaurant.name }} Logo" class="restaurant-logo" style="width: 100px; height: 100px; margin-right: 20px; border-radius: 50%; object-fit: cover;">
+        <div class="restaurant-info" style="max-width: 700px;">
+            <h1 class="restaurant-name" style="font-size: 2rem; color: #ff8c00;">{{ restaurant.name }}</h1>
+            <p class="restaurant-description" style="font-size: 1rem; color: #555; margin: 5px 0;">{{ restaurant.description }}</p>
+            <p class="restaurant-location" style="font-size: 0.8rem; color: #555; margin: 5px 0; display: flex; align-items: center;">
+                <span class="material-symbols-outlined" style="font-size: 1.5rem; margin-right: 4px;">location_on</span>
+                {{ restaurant.location }}
+            </p> <!-- Added Icon -->
+        </div>
+    </header>
+    
+    <!-- Product Section -->
+    <section class="products" style="margin-top: 20px;">
+        <h2 style="font-size: 1.8rem; color: #ff8c00; margin-bottom: 15px; font-weight: bold; text-align: center;">Products</h2>
+        <div class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+            <!-- Product Card -->
+            {% include 'restaurant_product_card.html' %}
+            <!-- Repeat for additional products -->
+        </div>
+    </section>
+
+    <!-- Tombol untuk menambahkan review baru -->
+    <div style="text-align: end; margin-bottom: 20px;">
+        {% if user.is_authenticated %}
+            <div class="flex justify-end gap-6 mb-6">
+                <a href="{% url 'review:create_review_entry' restaurant.id %}" class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg">
+                    Add Review
+                </a>
+                <button 
+                    data-modal-target="crudModal" 
+                    data-modal-toggle="crudModal" 
+                    data-restaurant-id="{{ restaurant.id }}"
+                    class="btn bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg addReviewAjax" 
+                    onclick="showModal();">
+                    Add Quick Review
+                </button>
+            </div>
+        {% else %}
+            <div>
+                <p style="text-align: center; color: red; font-weight: bolder;">
+                    LOGIN TO ADD YOUR OWN REVIEW
+                </p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Include Review Section -->
+    <section class="reviews reviewsTest" style="margin-top: 40px;">
+        <h2 style="font-size: 1.8rem; color: #ff8c00; margin-bottom: 15px; font-weight: bold; text-align: center;">People's Review About This Store</h2>
+        {% include 'review_store_detail.html' %}
+    </section>
+</div>
+{% endblock content %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        checkAuthState(); // Call the function to check authentication state
+    });
+</script>

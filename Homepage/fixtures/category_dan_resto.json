@@ -1,0 +1,182 @@
+[
+    {
+        "model": "Homepage.Category",
+        "pk": 1,
+        "fields": {
+            "name": "Food",
+            "image": "category_images\\food.png"
+        }
+    },
+    {
+        "model": "Homepage.Category",
+        "pk": 2,
+        "fields": {
+            "name": "Drink",
+            "image": "category_images\\drinks3.0.png"
+        }
+    },
+    {
+        "model": "Homepage.Category",
+        "pk": 3,
+        "fields": {
+            "name": "Souvenir",
+            "image": "category_images\\souvenirs.png"
+        }
+    },
+    {
+        "model": "Homepage.Category",
+        "pk": 4,
+        "fields": {
+            "name": "Bags & Wallets",
+            "image": "category_images\\bags.png"
+        }
+    },
+    {
+        "model": "Homepage.Category",
+        "pk": 5,
+        "fields": {
+            "name": "Jewelry",
+            "image": "category_images\\jewellry.png"
+        }
+    },
+    {
+        "model": "Homepage.Category",
+        "pk": 6,
+        "fields": {
+            "name": "Painting",
+            "image": "category_images\\painting.png"
+        }
+    },
+    {
+        "model": "Homepage.Category",
+        "pk": 7,
+        "fields": {
+            "name": "Handicraft",
+            "image": "category_images\\handicraft.png"
+        }
+    },
+    {
+        "model": "Homepage.Category",
+        "pk": 8,
+        "fields": {
+            "name": "Aromatherapy",
+            "image": "category_images\\aromatherapy.png"
+        }
+    },
+    {
+        "model": "Homepage.Category",
+        "pk": 9,
+        "fields": {
+            "name": "Beach Wear",
+            "image": "category_images\\beachwear2.0.jpg"
+        }
+    },
+    {
+        "model": "Homepage.Category",
+        "pk": 10,
+        "fields": {
+            "name": "Clothing",
+            "image": "category_images\\clothing.png"
+        }
+    },
+    {
+        "model": "Homepage.Restaurant",
+        "pk": 1,
+        "fields": {
+            "name": "Krisna Oleh-oleh Bali",
+            "location": "Jl. Bypass Ngurah Rai, Kuta, Kec. Kuta, Kabupaten Badung, Bali 80361",
+            "description": "Pusat Oleh Oleh Bali Terbesar dan Terlengkap di Asia Tenggara. Menyadari tingginya minat wisatawan terhadap oleh oleh, Krisna oleh oleh pun di dirikan pada tahun 2007. Sejak Saat itu Krisna mulai berkembang menjadi pusat oleh oleh terbesar di Bali dan merambah keberbagai macam lini bisnis hingga memiliki total Krisna secara keseluruhan 31 outlet. Jumlah outlet oleh oleh krisna hingga yang terbaru ini berjumlah 7 outlet dan 3 Mini Outlet. dan merupakan Toko oleh oleh terbesar dan terlengkap di Asia Tenggara.",
+            "image": "restaurant_logo\\krisnabali.webp"
+        }
+    },
+    {
+        "model": "Homepage.Restaurant",
+        "pk": 2,
+        "fields": {
+            "name": "Toko Mbak Tutik",
+            "location": "Jl. Sumatera No.29, Dauh Puri Kangin, Kec. Denpasar Bar., Kota Denpasar, Bali 80232",
+            "description": "Tempatnya mencari oleh-oleh bali.",
+            "image": "restaurant_logo\\mbaktutik.jpg"
+        }
+    },
+    {
+        "model": "Homepage.Restaurant",
+        "pk": 3,
+        "fields": {
+            "name": "Dewata Oleh Oleh Khas Bali",
+            "location": "Jl. Bypass Ngurah Rai No.53, Kesiman Kertalangu, Kec. Denpasar Tim., Kota Denpasar, Bali 80237",
+            "description": "Dewata menjual oleh-oleh Bali",
+            "image": "restaurant_logo\\dewatabali.webp"
+        }
+    },
+    {
+        "model": "Homepage.Restaurant",
+        "pk": 4,
+        "fields": {
+            "name": "TOKO BALIKOE",
+            "location": "Jl. Sumatera No.31, Dauh Puri Kangin, Kec. Denpasar Bar., Kota Denpasar, Bali 80232, Indonesia",
+            "description": "Butuh oleh-oleh khas Bali? Kami hadir sebagai solusi",
+            "image": "restaurant_logo\\tokobalikoe.jpg"
+        }
+    },
+    {
+        "model": "Homepage.Restaurant",
+        "pk": 5,
+        "fields": {
+            "name": "Sudana Silver Bali",
+            "location": "gg. swadaya, tohpati, Kesiman Kertalangu, Kec. Denpasar Tim., Kota Denpasar, Bali 80237",
+            "description": "Sudana Silver adalah UKM yang bergerak dibidang industri kerajinan Perhiasan perak dan berlokasi di Kota Denpasar,Bali. Wajib dibaca Calon Buyer / Pembeli Seluruh foto produk yang kami display merupakan 100% real picture hasil jepretan sendiri Mohon diskusikan setiap produk yang akan anda beli dengan CS kami dan CS kami akan memberikan pilihan yang terbaik untuk anda. *Cth: Ukuran Cincin, Kalung dan Gelang tidak akan sama.",
+            "image": "restaurant_logo\\sudanabali.jpg"
+        }
+    },
+    {
+        "model": "Homepage.Restaurant",
+        "pk": 6,
+        "fields": {
+            "name": "Felizeyeart Gallery",
+            "location": "Jl. Raya Pengosekan Kaja No.102, MAS, Kecamatan Ubud, Kabupaten Gianyar, Bali 80571",
+            "description": "This collection features a carefully curated selection of small art pieces that are perfect for adding warmth and character to cozy spaces. From delicate watercolors to bold abstracts, these small paintings pack a punch and add visual interest to any room. Each piece has been created with a keen eye for detail and an understanding of the importance of creating a warm and inviting atmosphere.",
+            "image": "restaurant_logo\\Felizeye.png"
+        }
+    },
+    {
+        "model": "Homepage.Restaurant",
+        "pk": 7,
+        "fields": {
+            "name": "Bali Parcel",
+            "location": "Jl. Raya Kengetan, Singakerta, Kecamatan Ubud, Kabupaten Gianyar, Bali 80571",
+            "description": "In business since 1995, Bali Parcel a professional manufacturer, exporter, supplier, and wholesaler of hand-made natural wooden carvings, decoration, ornament, figurines, furniture, as well as fashion jewelry and fashion accessories. Bali Parcel or CV Bali Parcel is based in Gianyar, Ubud, Bali Indonesia. Each hand-made souvenir is conventionally handcrafted with intricate patterns, hand carved and hand painted, and highlighting natural wood tones. Selection includes wooden carvings and sculptures of sea creature, animal, handicrafts, home & interior decor and ornaments, and furniture.",
+            "image": "restaurant_logo\\handicraft_logo.png"
+        }
+    },
+    {
+        "model": "Homepage.Restaurant",
+        "pk": 8,
+        "fields": {
+            "name": "Utama Spice",
+            "location": "Jl. Batu Belig No.17B, Kerobokan Kelod, Kec. Kuta Utara, Kabupaten Badung, Bali 80361",
+            "description": "Utama Spice is a 100% natural skin care company based in Ubud, Bali. We focus on applying traditional herbal knowledge to create products that not only enhance your skin’s natural beauty but also inspire you with the raw power of nature. We do this by using only 100% pure natural ingredients.",
+            "image": "restaurant_logo\\aromatherapy_logo.png"
+        }
+    },
+    {
+        "model": "Homepage.Restaurant",
+        "pk": 9,
+        "fields": {
+            "name": "by the Sea Bali",
+            "location": "Jl. Raya Seminyak No.32, Seminyak, Kec. Kuta, Kabupaten Badung, Bali 80361",
+            "description": "Based in Bali since 1999, By The Sea is a ready-to-wear resort wear brand. It is characterized by high-quality fabrics and clean lines. We believe in dedication, passion, and creativity. Our products appeal to people who embrace the beauty and essence of tropical living.",
+            "image": "restaurant_logo\\beachweaar_logo.webp"
+        }
+    },
+    {
+        "model": "Homepage.Restaurant",
+        "pk": 10,
+        "fields": {
+            "name": "Pithecanthropus Bali",
+            "location": "Jl. Subak Telaga I No.9, Ketewel, Kec. Sukawati, Kabupaten Gianyar, Bali 80582",
+            "description": "Culture in the forms of everyday art is what we envisioned Pithecanthropus more than 25 years ago. Started as a small gift shop with curated collections of traditional art from various ethnic groups across Indonesian archipelago, we are committed to relentlessly rediscover Indonesian culture.",
+            "image": "restaurant_logo\\clothing_logo.jpg"
+        }
+    }
+]

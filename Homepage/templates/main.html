@@ -1,7 +1,59 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block meta %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+<link rel="stylesheet" href="{% static 'css/category_filter.css' %}">
+{% endblock meta %}
+
+
 {% block content %}
     <div class="header">
         {% include 'navbar.html' %}
         {% include 'category.html' %}
     </div>
+
+    <main>
+        <div class="flex items-center justify-center pt-90">
+            <!-- Konten dengan scroll -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-0 content-filtered"> <!-- Menambahkan class scrollable-content -->
+                {% include 'card_product_main.html' %}
+            </div>
+        </div>
+    </main>
+
+
+
+<script>
+    $(document).ready(function () {
+        $(document).on('click', '.category-filter', function(e) {
+            e.preventDefault();
+
+            var category = $(this).data('category');  // Get the category name from the clicked element
+            console.log(category);
+
+            // Update the styling for the clicked button
+            $('.category-filter').removeClass('text-orange-500 border-2 border-orange-500 shadow-md rounded-full'); // Remove active styles from all
+            $(this).addClass('text-orange-500 border-2 border-orange-500 shadow-md rounded-full');  // Add active styles to the clicked button
+
+            // AJAX request to filter products
+            $.ajax({
+                method: "GET",
+                url: "{% url 'Homepage:filter_products' %}",  // URL to filter_products view
+                data: { 'category': category },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        $('.content-filtered').html(response.html);  // Update the content with the filtered results
+                    } else {
+                        alertify.error('Error: ' + response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alertify.error('Error: ' + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
+        
+
 {% endblock content %}

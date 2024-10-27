@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="header">
+    {% include 'navbar.html' %}
+</div>
+<h1>Add New Stories</h1>
+
+<form method="POST">
+  {% csrf_token %}
+  <table>
+    {{ form.as_table }}
+    <tr>
+      <td></td>
+      <td>
+        <input type="submit" value="Add Stories Entry" />
+      </td>
+    </tr>
+  </table>
+</form>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+<div class="flex justify-center bg-white w-full mt-2">
+    <div class="flex items-center space-x-5 px-4 flex-wrap">
+        <!-- Filter for All Categories -->
+        <a href="#" class="category-filter flex flex-col items-center {% if selected_category is None %}border-2 border-orange-500 text-orange-500 bg-opacity-0 shadow-md rounded-full{% else %}text-gray-400{% endif %} hover:bg-orange-500 hover:bg-opacity-10 transition duration-300 ease-in-out py-2 px-4 gap-2" data-category="">
+            <p class="text-sm font-semibold tracking-wide">ALL</p>
+        </a>
+        {% for category in categories %}
+            <a href="#" class="category-filter flex flex-col items-center {% if selected_category == category.name %}text-orange-500 border-2 border-orange-500 shadow-md rounded-full{% else %}text-gray-400{% endif %} hover:text-orange-500 transition duration-300 ease-in-out py-2 px-4 gap-2" data-category="{{ category.name }}">
+                <img src="{{ category.image.url }}" alt="{{ category.name }}" class="h-6 w-6"/>
+                <p class="text-xs font-normal">{{ category.name }}</p>
+            </a>
+        {% endfor %}
+    </div>
+</div>
