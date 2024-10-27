@@ -1,19 +1,51 @@
+{% load static %}
 {% for review in reviews %}
-  <div class="review">
-    <p><strong>{{ review.user.username }}</strong> memberikan rating {{ review.rating }}</p>
-    <p>{{ review.comment }}</p>
-    <p><small>{{ review.time }}</small></p>
+  <div class="flex flex-col dark:text-white w-full max-w-full bg-white dark:bg-neutral-900 p-5 rounded-md mt-8 shadow-md hover:scale-105 hover:duration-150 duration-150">
+    
+    <!-- Header: User and Timestamp -->
+    <div class="flex flex-row justify-between w-full">
+      <div class="flex items-center">
+        <p class="font-bold">{{ review.user.username }}</p>
+      </div>
+      <small class="text-gray-500">{{ review.time }}</small>
+    </div>
 
-    <!-- Tampilkan tombol edit dan delete jika review dibuat oleh user yang sedang login -->
+    <!-- Rating Display -->
+    <div class="flex flex-row">
+      {% for i in "12345" %}
+        <svg
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          class="h-4 w-4 {% if review.rating >= forloop.counter %}text-yellow-400{% else %}text-yellow-200{% endif %}"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M9.049 2.927c.3-.916 1.603-.916 1.902 0l1.286 3.953a1.5 1.5 0 001.421 1.033h4.171c.949 0 1.341 1.154.577 1.715l-3.38 2.458a1.5 1.5 0 00-.54 1.659l1.286 3.953c.3.916-.757 1.67-1.539 1.145l-3.38-2.458a1.5 1.5 0 00-1.76 0l-3.38 2.458c-.782.525-1.838-.229-1.539-1.145l1.286-3.953a1.5 1.5 0 00-.54-1.659l-3.38-2.458c-.764-.561-.372-1.715.577-1.715h4.171a1.5 1.5 0 001.421-1.033l1.286-3.953z"
+          ></path>
+        </svg>
+      {% endfor %}
+    </div>
+
+    <!-- Comment Display -->
+    <div class="mt-2">
+      <p>{{ review.comment }}</p>
+    </div>
+
+    <!-- Edit and Delete Buttons -->
     {% if review.user == request.user %}
-      <a href="{% url 'review:edit_review' review.pk %}" class="btn btn-primary">
-        Edit Review
-      </a>
-      <a href="{% url 'review:delete_review' review.pk %}" >
-         Delete Review
-      </a>
+      <div class="flex justify-end gap-2 mt-4">
+        <a href="{% url 'review:edit_review' review.pk %}" class="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition duration-150 ease-in-out">
+          Edit Review
+        </a>
+        <a href="{% url 'review:delete_review' review.pk %}" class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-700 transition duration-150 ease-in-out">
+          Delete Review
+        </a>
+      </div>
     {% endif %}
   </div>
 {% empty %}
-  <p>Belum ada review.</p>
+<div class="flex flex-col items-center justify-center min-h-[24rem] p-6 w-full">
+  <img src="{% static 'image/no-review.png' %}" alt="No Review" class="w-32 h-32 mb-4"/>
+  <p class="text-center mt-4" style="color: #000000; font-weight: bold;">NO REVIEWS YET</p>
+</div>
 {% endfor %}

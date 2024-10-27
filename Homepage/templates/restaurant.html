@@ -26,19 +26,25 @@
     </section>
 
     <!-- Tombol untuk menambahkan review baru -->
-    <div style="text-align: center; margin-bottom: 20px;">
+    <div style="text-align: end; margin-bottom: 20px;">
         {% if user.is_authenticated %}
-            <a href="{% url 'review:create_review_entry' restaurant.id %}" class="btn btn-primary" style="font-size: 1rem;">
-                Add Review
-            </a>
+            <div class="flex justify-end mb-6">
+                <a href="{% url 'review:create_review_entry' restaurant.id %}" class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg">
+                    Add Review
+                </a>
+            </div>
         {% else %}
-            <p style="text-align: center; color: red;">Please login to add a review.</p>
+            <div>
+                <p style="text-align: center; color: red; font-weight: bolder;">
+                    LOGIN TO ADD YOUR OWN REVIEW
+                </p>
+            </div>
         {% endif %}
     </div>
 
     <!-- Include Review Section -->
     <section class="reviews" style="margin-top: 40px;">
-        <h2 style="font-size: 1.8rem; color: #ff8c00; margin-bottom: 15px; font-weight: bold; text-align: center;">User Reviews</h2>
+        <h2 style="font-size: 1.8rem; color: #ff8c00; margin-bottom: 15px; font-weight: bold; text-align: center;">People's Review About This Store</h2>
         {% include 'review_store_detail.html' %}
     </section>
 </div>

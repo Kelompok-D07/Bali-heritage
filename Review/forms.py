@@ -6,5 +6,5 @@ class ReviewForm(ModelForm):
         model = Review
         fields = ['rating', 'comment']
         widget = {
-            'restaurat': HiddenInput()
+            'restaurant': HiddenInput(),
         }
