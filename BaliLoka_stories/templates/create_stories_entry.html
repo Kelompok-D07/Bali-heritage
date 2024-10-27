@@ -1,5 +1,9 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
+{% load static %}
 {% block content %}
+<div class="header">
+    {% include 'navbar.html' %}
+</div>
 <h1>Add New Stories</h1>
 
 <form method="POST">

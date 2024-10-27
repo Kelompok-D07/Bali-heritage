@@ -21,12 +21,13 @@ Bali Heritage bukan hanya sekadar platform untuk mencari suvenir khas, tetapi ju
 
 
 ## Fitur (Module):
-- Pengelolaan Produk (Homepage): Menampilkan lokasi-lokasi souvenir dengan informasi lengkap.
-- Forum: Ruang diskusi bagi pengguna untuk bertanya atau memberikan rekomendasi lokasi baru.
-- Review: Pengguna dapat memberikan ulasan mengenai lokasi yang mereka kunjungi.
-- Bookmark: Simpan lokasi-lokasi favorit untuk dikunjungi di kemudian hari.
-- BaliLoka Stories: Memberikan cerita dan sejarah-sejarah terkait beberapa benda unik dari bali
-
+| Fitur (Module)         | Deskripsi                                                                                   |
+|------------------------|---------------------------------------------------------------------------------------------|
+| Pengelolaan Produk (Bastian Adiputra Siregar)    | Menampilkan lokasi-lokasi souvenir dengan informasi lengkap.                                |
+| Forum (Husin Hidayatul Hakim)                 | Ruang diskusi bagi pengguna untuk bertanya atau memberikan rekomendasi lokasi baru.         |
+| Review (Muhammad Akmal Abdul Halim)                | Pengguna dapat memberikan ulasan mengenai lokasi yang mereka kunjungi.                      |
+| Bookmark (Muhammad Zaid Ats Tsabit)               | Simpan lokasi-lokasi favorit untuk dikunjungi di kemudian hari.                             |
+| BaliLoka Stories  (Muhammad Adiansyah)     | Memberikan cerita dan sejarah-sejarah terkait beberapa benda unik dari Bali.               |
 
 ## Role
 - **Admin**
@@ -34,4 +35,4 @@ Bali Heritage bukan hanya sekadar platform untuk mencari suvenir khas, tetapi ju
   Bisa menambah, mengedit dan mendelete isi dari `homepage` serta bisa menambah, mengedit dan mendelete artikel untuk `BaliLoka Stories`
 - **User**
 
-  Bisa menggunakan fitur fitur pada aplikasi seperti forum, mereview dan memberi ulasasn tempat dan lokasi yang pernah dikunjungi serta menggunakan fitur bookmark untuk menyimpan tempat favorit mereka
+  Bisa menggunakan fitur fitur pada aplikasi seperti forum, mereview dan memberi ulasan tempat dan lokasi yang pernah dikunjungi serta menggunakan fitur bookmark untuk menyimpan tempat favorit mereka
