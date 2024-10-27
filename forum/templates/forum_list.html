@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% include 'navbar.html' %}
+
+<div class="container mx-auto py-6">
+    <h1 class="text-2xl font-bold mb-4">Forum</h1>
+
+    <!-- Search Form -->
+    <form method="get" action="{% url 'forum:forum_list' %}" class="mb-4">
+        <input type="text" name="q" value="{{ search_query }}" placeholder="Search..." class="border p-2 rounded w-full sm:w-1/2">
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded mt-2 sm:mt-0 sm:ml-2">Search</button>
+    </form>
+
+    <!-- New Post Button -->
+    <div class="flex justify-end mb-4">
+        {% if user.is_authenticated %}
+            <button onclick="openNewPostModal()" class="bg-blue-500 text-white px-4 py-2 rounded">New Post</button>
+        {% else %}
+            <p class="text-red-500">
+                Please <a href="#" onclick="showPopup('loginPopup')" class="underline">login</a> to create a post.
+            </p>
+        {% endif %}
+    </div>
+
+    <!-- New Post Modal -->
+    <div id="newPostModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg p-6 w-80 relative">
+            <button onclick="closeNewPostModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+                &#x2715;
+            </button>
+            <h2 class="text-lg font-bold mb-4">Create New Post</h2>
+            <form id="newPostForm">
+                {% csrf_token %}
+                <input type="text" name="title" placeholder="Title" required class="border p-2 mb-2 w-full rounded"/>
+                <textarea name="content" placeholder="Content" required class="border p-2 mb-2 w-full rounded"></textarea>
+                <!-- Recommendations Input -->
+                <input type="text" name="recommendations" placeholder="Recommendations (comma-separated)" class="border p-2 mb-2 w-full rounded"/>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded w-full hover:bg-blue-700">Post</button>
+            </form>
+            <div id="newPostError" class="text-red-500 mt-2 hidden"></div>
+        </div>
+    </div>
+
+     <!-- Posts Container -->
+    <div id="postsContainer">
+        {% if search_query %}
+            <p class="mb-4">Search results for "<strong>{{ search_query }}</strong>":</p>
+        {% endif %}
+        {% for post in forums %}
+            <div id="post-{{ post.id }}" class="bg-white shadow-md rounded p-4 mb-4">
+                <!-- Indicate where the match was found -->
+                {% if post.is_title_match %}
+                    <p class="text-green-500 font-semibold">Match found in Title</p>
+                {% elif post.is_content_match %}
+                    <p class="text-blue-500 font-semibold">Match found in Content</p>
+                {% endif %}
+                <h2 class="text-xl font-semibold">
+                    {{ post.highlighted_title|safe }}
+                </h2>
+                <p class="text-gray-700 mt-2">
+                    {{ post.highlighted_content|linebreaksbr|safe }}
+                </p>
+                <!-- Display Recommendations -->
+                {% if post.recommendations_list %}
+                    <div class="mt-2">
+                        <span class="font-semibold">Recommendations:</span>
+                        <div class="flex flex-wrap mt-1">
+                            {% for recommendation in post.recommendations_list %}
+                                <span class="recommendation-tag bg-blue-100 text-blue-700 px-2 py-1 rounded-full mr-2 mb-2 cursor-pointer hover:bg-blue-200">
+                                    {{ recommendation }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+                <p class="text-sm text-gray-500 mt-2">By {{ post.author.username }} on {{ post.created_at }}</p>
+                <!-- Like button and other elements -->
+                <!-- ... (like button code remains the same) ... -->
+            </div>
+        {% empty %}
+            <p>No forum posts available.</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+<!-- JavaScript Code -->
+<script>
+    // Escape HTML function to prevent XSS in client-side rendering
+    function escapeHtml(text) {
+        var map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;',
+        };
+        return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+
+    // Show the New Post Modal
+    function openNewPostModal() {
+        document.getElementById('newPostModal').classList.remove('hidden');
+    }
+
+    // Close the New Post Modal
+    function closeNewPostModal() {
+        document.getElementById('newPostModal').classList.add('hidden');
+        document.getElementById('newPostError').classList.add('hidden');
+        document.getElementById('newPostError').textContent = '';
+        document.getElementById('newPostForm').reset();
+    }
+
+    // Handle New Post Form Submission
+    document.getElementById('newPostForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var form = this;
+        var formData = new FormData(form);
+
+        fetch("{% url 'forum:create_post' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                closeNewPostModal();
+                addNewPostToPage(data.post);
+            } else {
+                displayNewPostError(data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            displayNewPostError('An unexpected error occurred.');
+        });
+    });
+
+    // Display Error Message in Modal
+    function displayNewPostError(message) {
+        var errorDiv = document.getElementById('newPostError');
+        errorDiv.textContent = message;
+        errorDiv.classList.remove('hidden');
+    }
+
+    // Add the New Post to the Page
+    function addNewPostToPage(post) {
+        var title = escapeHtml(post.title);
+        var content = escapeHtml(post.content).replace(/\n/g, '<br>');
+        var recommendationsHtml = '';
+        if (post.recommendations) {
+            var recommendations = post.recommendations.split(',');
+            recommendationsHtml = '<div class="mt-2"><span class="font-semibold">Recommendations:</span><div class="flex flex-wrap mt-1">';
+            recommendations.forEach(function(recommendation) {
+                var rec = recommendation.trim();
+                if (rec) {
+                    recommendationsHtml += '<span class="recommendation-tag bg-blue-100 text-blue-700 px-2 py-1 rounded-full mr-2 mb-2 cursor-pointer hover:bg-blue-200">' + escapeHtml(rec) + '</span>';
+                }
+            });
+            recommendationsHtml += '</div></div>';
+        }
+
+        var postHtml = `
+            <div id="post-${post.id}" class="bg-white shadow-md rounded p-4 mb-4">
+                <h2 class="text-xl font-semibold">${title}</h2>
+                <p class="text-gray-700 mt-2">${content}</p>
+                ${recommendationsHtml}
+                <p class="text-sm text-gray-500 mt-2">By ${escapeHtml(post.author)} on ${post.created_at}</p>
+                <div class="flex items-center mt-4">
+                    <form method="post" action="/forum/like/${post.id}/" class="like-form">
+                        {% csrf_token %}
+                        <button type="submit" class="text-blue-500 hover:text-blue-700">
+                            Like
+                        </button>
+                    </form>
+                    <span class="ml-2">${post.total_likes} likes</span>
+                </div>
+            </div>
+        `;
+
+        var postsContainer = document.getElementById('postsContainer');
+        postsContainer.insertAdjacentHTML('afterbegin', postHtml);
+    }
+
+    // Handle Like/Unlike Actions via AJAX
+    document.getElementById('postsContainer').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var form = event.target;
+        if (form.classList.contains('like-form')) {
+            var actionUrl = form.action;
+            fetch(actionUrl, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updatePostLikeStatus(form.closest('.bg-white'), data.liked, data.total_likes);
+                } else {
+                    alert(data.error || 'An error occurred.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    });
+
+    // Update Like Button and Count
+    function updatePostLikeStatus(postElement, liked, totalLikes) {
+        var button = postElement.querySelector('.like-form button');
+        button.textContent = liked ? 'Unlike' : 'Like';
+        var likeCount = postElement.querySelector('.ml-2');
+        likeCount.textContent = `${totalLikes} likes`;
+    }
+
+    // Event Delegation for Recommendation Clicks
+    document.getElementById('postsContainer').addEventListener('click', function(event) {
+        if (event.target.matches('.recommendation-tag')) {
+            var recommendation = event.target.textContent.trim();
+            alert('You clicked on recommendation: ' + recommendation);
+        }
+    });
+</script>
+
+{% endblock content %}

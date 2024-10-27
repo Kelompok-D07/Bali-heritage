@@ -1,7 +1,7 @@
 from django import forms
-from .models import ForumPost
+from .models import Forum
 
-class ForumPostForm(forms.ModelForm):
+class ForumForm(forms.ModelForm):
     class Meta:
-        model = ForumPost
+        model = Forum
         fields = ['title', 'content']
