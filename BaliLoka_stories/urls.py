@@ -11,5 +11,5 @@ urlpatterns = [
     path('json/', show_json, name='show_json'),
     path('create-stories-entry-ajax', add_stories_entry_ajax, name='add_stories_entry_ajax'),
     path('edit-stories/<uuid:id>', edit_stories, name='edit_stories'),
-    path('delete/<uuid:id>', delete_stories, name='delete_stories'),
+    path('delete-stories/<uuid:id>', delete_stories, name='delete_stories'),
 ]
