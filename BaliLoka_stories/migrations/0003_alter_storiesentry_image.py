@@ -14,5 +14,5 @@ class Migration(migrations.Migration):
             model_name='storiesentry',
             name='image',
             field=models.ImageField(upload_to='image_coba/'),
-        ),
+        )
     ]
