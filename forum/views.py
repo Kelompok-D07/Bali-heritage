@@ -7,11 +7,13 @@ from django.db.models import (
     Count, Exists, OuterRef, Value, BooleanField,
     Case, When, Q, IntegerField
 )
-from django.contrib import messages
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.utils import timezone
 from django.utils.html import escape, mark_safe
+from Homepage.models import Restaurant  # Import Restaurant
 import re
+import uuid
+from django.core.paginator import Paginator
 
 def highlight_text(text, search_query):
     # Escape the text to prevent XSS
@@ -104,40 +106,179 @@ def create_post(request):
     if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         title = request.POST.get('title', '').strip()
         content = request.POST.get('content', '').strip()
-        recommendations = request.POST.get('recommendations', '').strip()
-
-        # Escape user input to prevent XSS
-        title = escape(title)
-        content = escape(content)
-        recommendations = escape(recommendations)
+        recommendations_ids = request.POST.getlist('recommendations')
 
         # Validate input
         if not title or not content:
             return JsonResponse({'success': False, 'error': 'Title and content are required.'}, status=400)
 
+        # Escape user input to prevent XSS
+        title = escape(title)
+        content = escape(content)
+
         # Create the new forum post
         post = Forum.objects.create(
             title=title,
             content=content,
-            recommendations=recommendations,
             author=request.user,
             created_at=timezone.now()
         )
 
+        # Add recommendations if any
+        if recommendations_ids:
+            try:
+                recommendations_ids = [uuid.UUID(id_) for id_ in recommendations_ids]
+                restaurants = Restaurant.objects.filter(id__in=recommendations_ids)
+                post.recommendations.set(restaurants)
+            except ValueError:
+                return JsonResponse({'success': False, 'error': 'Invalid recommendations.'}, status=400)
+        else:
+            post.recommendations.clear()
+
         # Prepare data to return
+        recommendations_data = []
+        for rec in post.recommendations.all():
+            recommendations_data.append({
+                'id': str(rec.id),
+                'name': rec.name,
+            })
+
         data = {
             'success': True,
             'post': {
-                'id': post.id,
+                'id': str(post.id),
                 'title': post.title,
                 'content': post.content,
-                'recommendations': post.recommendations,
+                'recommendations': recommendations_data,
                 'author': post.author.username,
                 'created_at': post.created_at.strftime('%Y-%m-%d %H:%M'),
                 'total_likes': post.total_likes(),
-                'has_liked': False,  # User hasn't liked it yet
+                'has_liked': False,
             }
         }
         return JsonResponse(data)
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request.'}, status=400)
+
+@login_required
+def get_post(request, post_id):
+    post = get_object_or_404(Forum, id=post_id)
+
+    # Check if the current user is the author
+    if post.author != request.user:
+        return JsonResponse({'success': False, 'error': 'You are not allowed to edit this post.'}, status=403)
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        recommendations = post.recommendations.all()
+        recommendations_ids = [str(rec.id) for rec in recommendations]
+        recommendations_names = {str(rec.id): rec.name for rec in recommendations}
+        data = {
+            'success': True,
+            'post': {
+                'id': str(post.id),
+                'title': post.title,
+                'content': post.content,
+                'recommendations': recommendations_ids,
+                'recommendations_names': recommendations_names,
+            }
+        }
+        return JsonResponse(data)
+    else:
+        return HttpResponseBadRequest('Invalid request.')
+
+@login_required
+def edit_post(request, post_id):
+    post = get_object_or_404(Forum, id=post_id)
+
+    # Check if the current user is the author
+    if post.author != request.user:
+        return JsonResponse({'success': False, 'error': 'You are not allowed to edit this post.'}, status=403)
+
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        title = request.POST.get('title', '').strip()
+        content = request.POST.get('content', '').strip()
+        recommendations_ids = request.POST.getlist('recommendations')
+
+        # Validate input
+        if not title or not content:
+            return JsonResponse({'success': False, 'error': 'Title and content are required.'}, status=400)
+
+        # Escape user input to prevent XSS
+        title = escape(title)
+        content = escape(content)
+
+        # Update the post
+        post.title = title
+        post.content = content
+        post.save()
+
+        # Update recommendations
+        if recommendations_ids:
+            try:
+                recommendations_ids = [uuid.UUID(id_) for id_ in recommendations_ids]
+                restaurants = Restaurant.objects.filter(id__in=recommendations_ids)
+                post.recommendations.set(restaurants)
+            except ValueError:
+                return JsonResponse({'success': False, 'error': 'Invalid recommendations.'}, status=400)
+        else:
+            post.recommendations.clear()
+
+        # Prepare data to return
+        recommendations_data = []
+        for rec in post.recommendations.all():
+            recommendations_data.append({
+                'id': str(rec.id),
+                'name': rec.name,
+            })
+
+        data = {
+            'success': True,
+            'post': {
+                'id': str(post.id),
+                'title': post.title,
+                'content': post.content,
+                'recommendations': recommendations_data,
+            }
+        }
+        return JsonResponse(data)
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request.'}, status=400)
+
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Forum, id=post_id)
+
+    # Check if the current user is the author
+    if post.author != request.user:
+        return JsonResponse({'success': False, 'error': 'You are not allowed to delete this post.'}, status=403)
+
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        post.delete()
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request.'}, status=400)
+
+def restaurant_search(request):
+    query = request.GET.get('q', '')
+    page = int(request.GET.get('page', 1))
+
+    restaurants = Restaurant.objects.filter(name__icontains=query).order_by('name')
+
+    # Use Paginator if the list is long
+    paginator = Paginator(restaurants, 10)  # 10 restaurants per page
+    restaurants_page = paginator.get_page(page)
+
+    results = []
+    for restaurant in restaurants_page:
+        results.append({
+            'id': str(restaurant.id),  # Ensure ID is converted to string
+            'text': restaurant.name,
+        })
+
+    data = {
+        'results': results,
+        'pagination': {
+            'more': restaurants_page.has_next()
+        }
+    }
+    return JsonResponse(data)

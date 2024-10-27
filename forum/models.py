@@ -7,7 +7,8 @@ from django.utils.html import escape
 class Forum(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
-    recommendations = models.TextField(blank=True, null=True)  # Field to store recommendations
+    recommendations = models.ManyToManyField('Homepage.Restaurant', blank=True)
+
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
