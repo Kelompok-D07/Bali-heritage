@@ -29,34 +29,19 @@ def create_stories_entry(request):
 @csrf_exempt
 @require_POST
 def add_stories_entry_ajax(request):
+    print("pertama")
     name = request.POST.get("name")
     image = request.FILES.get("image")
     description = request.POST.get("description")
-    user = request.user
 
-    if request.method == request.POST:
-        new_product = StoriesEntryForm(
-            name=name,
-            image=image,
-            description=description,
-            user=user
-        )
-        new_product.save()
+    new_product = StoriesEntry(
+        name=name,
+        image=image,
+        description=description,
+    )
+    new_product.save()
 
     return HttpResponse(b"CREATED", status=201)
-
-# @csrf_exempt
-# @require_POST
-# def add_stories_entry_ajax(request):
-#     form = StoriesEntryForm(request.POST, request.FILES)
-    
-#     if form.is_valid():
-#         new_story = form.save(commit=False)  # Jangan langsung simpan ke database
-#         new_story.user = request.user        # Tambahkan user ke objek yang akan disimpan
-#         new_story.save()                     # Simpan objek ke database
-#         return HttpResponse(b"CREATED", status=201)
-#     else:
-#         return HttpResponse(b"INVALID", status=400)
 
 def edit_stories(request, id):
     # Get mood entry berdasarkan id
