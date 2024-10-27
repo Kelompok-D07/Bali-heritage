@@ -1,0 +1,132 @@
+[
+    {
+        "model": "Homepage.Category",
+        "pk": 1,
+        "fields": {
+            "name": "Food",
+            "image": "category_images\\food.png"
+        }
+    },
+    {
+        "model": "Homepage.Category",
+        "pk": 2,
+        "fields": {
+            "name": "Drink",
+            "image": "category_images\\drinks3.0.png"
+        }
+    },
+    {
+        "model": "Homepage.Category",
+        "pk": 3,
+        "fields": {
+            "name": "Souvenir",
+            "image": "category_images\\souvenirs.png"
+        }
+    },
+    {
+        "model": "Homepage.Category",
+        "pk": 4,
+        "fields": {
+            "name": "Bags & Wallets",
+            "image": "category_images\\bags.png"
+        }
+    },
+    {
+        "model": "Homepage.Category",
+        "pk": 5,
+        "fields": {
+            "name": "Jewelry",
+            "image": "category_images\\jewellry.png"
+        }
+    },
+    {
+        "model": "Homepage.Category",
+        "pk": 6,
+        "fields": {
+            "name": "Painting",
+            "image": "category_images\\painting.png"
+        }
+    },
+    {
+        "model": "Homepage.Category",
+        "pk": 7,
+        "fields": {
+            "name": "Handicraft",
+            "image": "category_images\\handicraft.png"
+        }
+    },
+    {
+        "model": "Homepage.Category",
+        "pk": 8,
+        "fields": {
+            "name": "Aromatherapy",
+            "image": "category_images\\aromatherapy.png"
+        }
+    },
+    {
+        "model": "Homepage.Category",
+        "pk": 9,
+        "fields": {
+            "name": "Beach Wear",
+            "image": "category_images\\beachwear2.0.jpg"
+        }
+    },
+    {
+        "model": "Homepage.Category",
+        "pk": 10,
+        "fields": {
+            "name": "Clothing",
+            "image": "category_images\\clothing.png"
+        }
+    },
+    {
+        "model": "Homepage.Restaurant",
+        "pk": 1,
+        "fields": {
+            "name": "Krisna Oleh-oleh Bali",
+            "location": "Jl. Bypass Ngurah Rai, Kuta, Kec. Kuta, Kabupaten Badung, Bali 80361",
+            "description": "Pusat Oleh Oleh Bali Terbesar dan Terlengkap di Asia Tenggara. Menyadari tingginya minat wisatawan terhadap oleh oleh, Krisna oleh oleh pun di dirikan pada tahun 2007. Sejak Saat itu Krisna mulai berkembang menjadi pusat oleh oleh terbesar di Bali dan merambah keberbagai macam lini bisnis hingga memiliki total Krisna secara keseluruhan 31 outlet. Jumlah outlet oleh oleh krisna hingga yang terbaru ini berjumlah 7 outlet dan 3 Mini Outlet. dan merupakan Toko oleh oleh terbesar dan terlengkap di Asia Tenggara.",
+            "image": "restaurant_logo\\krisnabali.webp"
+        }
+    },
+    {
+        "model": "Homepage.Restaurant",
+        "pk": 2,
+        "fields": {
+            "name": "Toko Mbak Tutik",
+            "location": "Jl. Sumatera No.29, Dauh Puri Kangin, Kec. Denpasar Bar., Kota Denpasar, Bali 80232",
+            "description": "Tempatnya mencari oleh-oleh bali.",
+            "image": "restaurant_logo\\mbaktutik.jpg"
+        }
+    },
+    {
+        "model": "Homepage.Restaurant",
+        "pk": 3,
+        "fields": {
+            "name": "Dewata Oleh Oleh Khas Bali",
+            "location": "Jl. Bypass Ngurah Rai No.53, Kesiman Kertalangu, Kec. Denpasar Tim., Kota Denpasar, Bali 80237",
+            "description": "Dewata menjual oleh-oleh Bali",
+            "image": "restaurant_logo\\dewatabali.webp"
+        }
+    },
+    {
+        "model": "Homepage.Restaurant",
+        "pk": 4,
+        "fields": {
+            "name": "TOKO BALIKOE",
+            "location": "Jl. Sumatera No.31, Dauh Puri Kangin, Kec. Denpasar Bar., Kota Denpasar, Bali 80232, Indonesia",
+            "description": "Butuh oleh-oleh khas Bali? Kami hadir sebagai solusi",
+            "image": "restaurant_logo\\tokobalikoe.jpg"
+        }
+    },
+    {
+        "model": "Homepage.Restaurant",
+        "pk": 5,
+        "fields": {
+            "name": "Sudana Silver Bali",
+            "location": "gg. swadaya, tohpati, Kesiman Kertalangu, Kec. Denpasar Tim., Kota Denpasar, Bali 80237",
+            "description": "Sudana Silver adalah UKM yang bergerak dibidang industri kerajinan Perhiasan perak dan berlokasi di Kota Denpasar,Bali. Wajib dibaca Calon Buyer / Pembeli Seluruh foto produk yang kami display merupakan 100% real picture hasil jepretan sendiri Mohon diskusikan setiap produk yang akan anda beli dengan CS kami dan CS kami akan memberikan pilihan yang terbaik untuk anda. *Cth: Ukuran Cincin, Kalung dan Gelang tidak akan sama.",
+            "image": "restaurant_logo\\sudanabali.jpg"
+        }
+    }
+]
