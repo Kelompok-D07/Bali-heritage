@@ -6,19 +6,15 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
-from django.http import HttpResponse, HttpResponseRedirect
+from django.template.loader import render_to_string
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core import serializers
 
 @login_required(login_url='/')
 def show_main(request):
-    review = Review.objects.filter(user=request.user)
-    context = {
-        'review': review,
-    }
+    context = {}
 
     return render(request, "main.html", context)
-
-from uuid import UUID
 
 def create_review_entry(request, restaurant_id):
     # Ensure the user is logged in
@@ -52,11 +48,11 @@ def review_store_detail(request, id):
     })
 
 def show_xml(request):
-    data = Review.objects.all()
+    data = Review.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
 
 def show_json(request):
-    data = Review.objects.all()
+    data = Review.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 def show_xml_by_id(request, id):
@@ -100,16 +96,40 @@ def delete_review(request, id):
 
 @csrf_exempt
 @require_POST
-def add_review_entry_ajax(request):
-    comment = request.POST.get("comment")
-    rating = request.POST.get("rating")
-    user = request.user
+def add_review_entry_ajax(request, restaurant_id):
+    try:
+        comment = request.POST.get("comment")
+        rating = request.POST.get("rating")
+        user = request.user
 
-    new_review = Review(
-        comment=comment,
-        rating=rating,
-        user=user
-    )
-    new_review.save()
+        # Cek apakah restaurant_id ada dan restoran ditemukan
+        restaurant = Restaurant.objects.get(id=restaurant_id)
 
-    return HttpResponse(b"CREATED", status=201)
+        # Simpan review baru
+        new_review = Review(
+            comment=comment,
+            rating=int(rating) if rating else 0,
+            user=user,
+            restaurant=restaurant
+        )
+        new_review.save()
+
+        # Data review baru untuk dikembalikan ke AJAX
+        review_data = {
+            "user": user.username,
+            "comment": comment,
+            "rating": int(rating),
+            "time": new_review.time.strftime("%Y-%m-%d"),
+            "review_id": str(new_review.id)
+        }
+        
+        reviews = restaurant.review.all()
+        html = render_to_string('review_store_detail.html', {'reviews':reviews}, request=request)
+        return JsonResponse({"status": "success", "html": html})
+
+    except Restaurant.DoesNotExist:
+        return JsonResponse({"status": "error", "errors": "Restaurant not found"}, status=404)
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return JsonResponse({"status": "error", "errors": str(e)}, status=500)

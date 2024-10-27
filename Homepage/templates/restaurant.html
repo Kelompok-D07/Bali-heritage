@@ -28,10 +28,18 @@
     <!-- Tombol untuk menambahkan review baru -->
     <div style="text-align: end; margin-bottom: 20px;">
         {% if user.is_authenticated %}
-            <div class="flex justify-end mb-6">
+            <div class="flex justify-end gap-6 mb-6">
                 <a href="{% url 'review:create_review_entry' restaurant.id %}" class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg">
                     Add Review
                 </a>
+                <button 
+                    data-modal-target="crudModal" 
+                    data-modal-toggle="crudModal" 
+                    data-restaurant-id="{{ restaurant.id }}"
+                    class="btn bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg addReviewAjax" 
+                    onclick="showModal();">
+                    Add Quick Review
+                </button>
             </div>
         {% else %}
             <div>
@@ -43,7 +51,7 @@
     </div>
 
     <!-- Include Review Section -->
-    <section class="reviews" style="margin-top: 40px;">
+    <section class="reviews reviewsTest" style="margin-top: 40px;">
         <h2 style="font-size: 1.8rem; color: #ff8c00; margin-bottom: 15px; font-weight: bold; text-align: center;">People's Review About This Store</h2>
         {% include 'review_store_detail.html' %}
     </section>
