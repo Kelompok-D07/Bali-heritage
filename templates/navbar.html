@@ -1,25 +1,32 @@
 {% load static %}
 <div class="grid grid-cols-1 sm:grid-cols-3 px-4 sm:px-16 w-full h-20 border-b border-gray-300 items-center bg-white">
-    <a href="/">
-        <img src="{% static 'image/logo.png' %}" alt="Logo" class="h-16 w-16 mx-auto sm:mx-0"/> 
-    </a>
+    <div class="flex items-center">
+        <a href="/">
+            <img src="{% static 'image/logo.png' %}" alt="Logo" class="h-16 w-16 mx-auto sm:mx-0"/> 
+        </a>
+        {% if user.is_authenticated %}
+            <span class="text-black-500 font-bold pt-2 ml-2 balinese-text">Welcome, {{ user.username }}</span>
+        {% endif %}
+    </div>
+
     <div class="flex justify-evenly items-center border rounded-full shadow-md h-12 w-full sm:w-72 mx-2">
-        <a href="/stories" class="border-r-2 text-sm font-medium px-6">Our Stories</a>
-        <a href="/forums" class="text-sm font-medium px-4">Forums</a>
+        <a href="/stories" class="border-r-2 text-sm font-medium px-6 text-gray-400 hover:text-black">Our Stories</a>
+        <a href="/forums" class="text-sm font-medium px-4 text-gray-400 hover:text-black">Forums</a>
         <button class="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center">
             <i class="fa-solid fa-magnifying-glass"></i>
         </button>
     </div>
+
     <div class="flex justify-end items-center gap-4">
-        <a href="/bookmarks" class="text-sm font-medium">Your Bookmarks</a>
-        
+        <a href="#" onclick="checkLogin()" class="text-sm font-medium text-gray-400 hover:text-black">Your Bookmarks</a>
+
         <div class="relative">
             <button id="dropdownButton" class="flex justify-evenly items-center gap-2 rounded-full border shadow-md h-10 w-20 py-1.25 pr-1.25 pl-2 hover:shadow-lg transition-shadow duration-200" onclick="toggleDropdown()">
                 <i class="fa-solid fa-bars"></i>
-                <span class="bg-black text-white rounded-full text-center w-7 h-7 text-[10px] font-semibold flex items-center justify-center">E</span>
+                <span class="material-symbols-outlined rounded-full items-center w-8 h-6 justify-center">account_circle</span>
             </button>
 
-            <div id="dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg">
+            <div id="dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg" style="z-index: 9999;">
                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" id="registerLink" onclick="showPopup('registerPopup')">Register</a>
                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" id="loginLink" onclick="showPopup('loginPopup')">Login</a>
                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hidden" id="logoutLink">Logout</a>
@@ -28,9 +35,8 @@
     </div>
 </div>
 
-<div id="registerPopup" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+<div id="registerPopup" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" style="z-index: 9999;">
     <div class="bg-white rounded-lg p-6 w-80 relative">
-        <!-- Close Button -->
         <button onclick="hidePopup('registerPopup')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -43,9 +49,8 @@
     </div>
 </div>
 
-<div id="loginPopup" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+<div id="loginPopup" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" style="z-index: 9999;">
     <div class="bg-white rounded-lg p-6 w-80 relative">
-        <!-- Close Button -->
         <button onclick="hidePopup('loginPopup')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -138,6 +143,7 @@
                 hidePopup('loginPopup');
                 document.cookie = "auth=true";  // Set cookie for login state
                 checkAuthState();  // Update button visibility
+                window.location.reload();
             } else {
                 alert(data.error);
             }
@@ -157,10 +163,23 @@
                 alert('Logged out successfully!');
                 document.cookie = "auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                 checkAuthState();  // Update button visibility
+                window.location.href = '/';  // Redirect to homepage after logout
             }
         });
     });
 
     // Check authentication state on page load
     document.addEventListener('DOMContentLoaded', checkAuthState);
+    function checkLogin() {
+        // Check for a cookie or any other way to determine if the user is logged in
+        const isLoggedIn = document.cookie.split(';').some(item => item.trim().startsWith('auth='));
+
+        if (!isLoggedIn) {
+            alert("You need to log in first.");
+            showPopup('loginPopup');
+        } else {
+            // Redirect to bookmarks page
+            window.location.href = '/bookmarks/';
+        }
+    }
 </script>
