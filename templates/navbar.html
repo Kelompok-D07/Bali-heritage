@@ -11,7 +11,8 @@
 
     <div class="flex justify-evenly items-center border rounded-full shadow-md h-12 w-full sm:w-72 mx-2">
         <a href="/stories" class="border-r-2 text-sm font-medium px-6 text-gray-400 hover:text-black">Our Stories</a>
-        <a href="/forums" class="text-sm font-medium px-4 text-gray-400 hover:text-black">Forums</a>
+        <a href="{% url 'forum:forum_list' %}" class="text-sm font-medium px-4 text-gray-400 hover:text-black">Forum</a>
+
         <button class="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center">
             <i class="fa-solid fa-magnifying-glass"></i>
         </button>
