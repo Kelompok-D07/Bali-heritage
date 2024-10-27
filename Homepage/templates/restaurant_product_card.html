@@ -1,0 +1,12 @@
+{% for product in products %}
+<div class="product-card" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 15px; transition: transform 0.2s ease-in-out; margin-bottom: 15px; display: flex; flex-direction: column; align-items: center;">
+    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image" style="width: 100%; height: auto; max-height: 150px; object-fit: contain; border-radius: 8px; margin-bottom: 10px;">
+    <div class="product-details" style="text-align: center;">
+        <h3 class="product-name" style="font-size: 1.2rem; color: #333; margin-bottom: 8px;">{{ product.name }}</h3>
+        <p class="product-description" style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">{{ product.description }}</p>
+        <p class="product-price" style="font-size: 1.1rem; color: #ff8c00; font-weight: bold;">Rp {{ product.price }}</p>
+    </div>
+</div>
+{% empty %}
+    <p>No products available in this category.</p>
+{% endfor %}

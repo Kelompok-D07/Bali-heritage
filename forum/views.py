@@ -1,34 +1,31 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Forum
-from .forms import ForumForm
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import ForumPost, Like
+from .forms import ForumPostForm
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 
 def forum_list(request):
-    forums = Forum.objects.all().order_by('-created_at')
-    return render(request, 'forum/forum_list.html', {'forums': forums})
-
-def forum_detail(request, pk):
-    forum = get_object_or_404(Forum, pk=pk)
-    return render(request, 'forum/forum_detail.html', {'forum': forum})
+    posts = ForumPost.objects.annotate(total_likes=Count('likes')).order_by('-total_likes', '-created_at')
+    return render(request, 'forum_list.html', {'posts': posts})
 
 @login_required
-def forum_create(request):
+def create_post(request):
     if request.method == 'POST':
-        form = ForumForm(request.POST)
+        form = ForumPostForm(request.POST)
         if form.is_valid():
-            forum = form.save(commit=False)
-            forum.author = request.user
-            forum.save()
-            return redirect('forum_detail', pk=forum.pk)
+            forum_post = form.save(commit=False)
+            forum_post.author = request.user
+            forum_post.save()
+            return redirect('Forum:forum_list')
     else:
-        form = ForumForm()
-    return render(request, 'forum/forum_form.html', {'form': form})
+        form = ForumPostForm()
+    return render(request, 'create_post.html', {'form': form})
 
 @login_required
-def forum_like(request, pk):
-    forum = get_object_or_404(Forum, pk=pk)
-    if request.user in forum.likes.all():
-        forum.likes.remove(request.user)
-    else:
-        forum.likes.add(request.user)
-    return redirect('forum_detail', pk=pk)
+def like_post(request, post_id):
+    post = get_object_or_404(ForumPost, id=post_id)
+    like, created = Like.objects.get_or_create(post=post, user=request.user)
+    if not created:
+        # User already liked this post; remove the like
+        like.delete()
+    return redirect('Forum:forum_list')

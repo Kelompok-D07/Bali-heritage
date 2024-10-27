@@ -1,10 +1,10 @@
 from django.urls import path
-from . import views
+from .views import forum_list, create_post, like_post
+
+app_name = 'Forum'
 
 urlpatterns = [
-    path('', views.forum_list, name='forum_list'),
-    path('forum/<int:pk>/', views.forum_detail, name='forum_detail'),
-    path('forum/new/', views.forum_create, name='forum_create'),
-    path('forum/<int:pk>/like/', views.forum_like, name='forum_like'),
-
+    path('', forum_list, name='forum_list'),
+    path('create/', create_post, name='create_post'),
+    path('like/<int:post_id>/', like_post, name='like_post'),
 ]
