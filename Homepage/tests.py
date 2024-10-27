@@ -57,5 +57,4 @@ class ProductViewTests(TestCase):
         response = self.client.get(reverse('Homepage:show_main') + '?category=Food')
         self.assertEqual(response.status_code, 200)
 
-# To run this test, simply execute the command:
 # python manage.py test Homepage
