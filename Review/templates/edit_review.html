@@ -1,22 +1,114 @@
 {% extends 'base.html' %}
-
 {% load static %}
+
+{% block meta %}
+<title>Edit Review</title>
+{% endblock meta %}
 
 {% block content %}
 {% include 'navbar.html' %}
-<h1>Edit Review</h1>
 
-<form method="POST">
-    {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-        <tr>
-            <td></td>
-            <td>
-                <input type="submit" value="Edit Review"/>
-            </td>
-        </tr>
-    </table>
-</form>
+<style>
+  /* Styling rating bintang */
+  .rating:not(:checked) > input {
+    position: absolute;
+    appearance: none;
+  }
+
+  .rating:not(:checked) > label {
+    float: right;
+    cursor: pointer;
+    font-size: 30px;
+    color: #666;
+  }
+
+  .rating:not(:checked) > label:before {
+    content: '★';
+  }
+
+  .rating > input:checked + label:hover,
+  .rating > input:checked + label:hover ~ label,
+  .rating > input:checked ~ label:hover,
+  .rating > input:checked ~ label:hover ~ label,
+  .rating > label:hover ~ input:checked ~ label {
+    color: #e58e09;
+  }
+
+  .rating:not(:checked) > label:hover,
+  .rating:not(:checked) > label:hover ~ label {
+    color: #ff9e0b;
+  }
+
+  .rating > input:checked ~ label {
+    color: #ffa723;
+  }
+
+  textarea {
+        width: 100% !important;
+        height: 150px !important;
+        resize: none !important;
+        border: 1px solid #ccc;
+        padding: 10px;
+  }
+</style>
+
+<div class="flex flex-col min-h-screen bg-gray-100">
+  <div class="container mx-auto px-4 py-8 mt-16 max-w-xl">
+    <h1 class="text-3xl font-bold text-center mb-8 text-black">Edit Review</h1>
+  
+    <div class="bg-white shadow-md rounded-lg p-6 form-style">
+      <form method="POST" class="space-y-6">
+        {% csrf_token %}
+
+        <!-- Loop melalui fields, kecuali rating -->
+        {% for field in form %}
+          {% if field.name != 'rating' %}
+            <div class="flex flex-col">
+              <label for="{{ field.id_for_label }}" class="mb-2 font-semibold text-black">
+                {{ field.label }}
+              </label>
+              <div class="w-full">
+                {{ field }}
+              </div>
+              {% if field.help_text %}
+                <p class="mt-1 text-sm text-black">{{ field.help_text }}</p>
+              {% endif %}
+              {% for error in field.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endfor %}
+
+        <!-- Custom Rating Field -->
+        <div class="flex flex-col">
+          <label class="mb-2 font-semibold text-black">Rating</label>
+          <div class="rating">
+            <input type="radio" name="rating" id="star5" value="5" {% if form.rating.value == "5" %}checked{% endif %}>
+            <label for="star5" title="5 stars"></label>
+
+            <input type="radio" name="rating" id="star4" value="4" {% if form.rating.value == "4" %}checked{% endif %}>
+            <label for="star4" title="4 stars"></label>
+
+            <input type="radio" name="rating" id="star3" value="3" {% if form.rating.value == "3" %}checked{% endif %}>
+            <label for="star3" title="3 stars"></label>
+
+            <input type="radio" name="rating" id="star2" value="2" {% if form.rating.value == "2" %}checked{% endif %}>
+            <label for="star2" title="2 stars"></label>
+
+            <input type="radio" name="rating" id="star1" value="1" {% if form.rating.value == "1" %}checked{% endif %}>
+            <label for="star1" title="1 star"></label>
+          </div>
+        </div>
+
+        <div class="flex justify-center mt-6">
+          <button type="submit" class="bg-orange-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-orange-700 transition duration-300 ease-in-out w-full">
+            Edit Review
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 {% endblock content %}

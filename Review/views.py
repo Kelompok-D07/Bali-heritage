@@ -46,10 +46,9 @@ def review_store_detail(request, id):
     # Ambil review yang terkait dengan store tertentu
     restaurant = get_object_or_404(Restaurant, pk=id)
     reviews = restaurant.review.all()
-    print(reviews.values())
     return render(request, 'restaurant.html', {
         'restaurant': restaurant,
-        'reviews': reviews
+        'reviews': reviews,
     })
 
 def show_xml(request):
