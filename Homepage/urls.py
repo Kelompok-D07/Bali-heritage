@@ -7,5 +7,4 @@ urlpatterns = [
     path('', show_main, name='show_main'),
     path('restaurant/', restaurant, name='restaurant'),
     path('filter-product/', filter_product, name='filter_products'),  # URL untuk filtering
-    
 ]

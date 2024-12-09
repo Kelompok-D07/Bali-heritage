@@ -87,3 +87,18 @@ def logout(request):
             "status": False,
             "message": "Logout failed."
         }, status=401)
+
+@csrf_exempt
+def check_admin(request):
+    if request.user.is_authenticated:
+        return JsonResponse({
+            "is_admin": request.user.is_superuser,
+            "status": True,
+            "message": "Admin status fetched successfully."
+        }, status=200)
+    else:
+        return JsonResponse({
+            "is_admin": False,
+            "status": False,
+            "message": "User is not logged in."
+        }, status=401)

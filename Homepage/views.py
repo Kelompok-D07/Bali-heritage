@@ -2,8 +2,9 @@ from django.shortcuts import render, reverse, get_object_or_404
 from .models import Product, Category, Restaurant
 from Review.models import Review
 from bookmarks.models import Bookmark  # Make sure Category is imported
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template.loader import render_to_string
+from django.core import serializers
 
 
 def show_main(request):
