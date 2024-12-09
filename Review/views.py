@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from Review.models import Review
 from Review.forms import ReviewForm
@@ -133,3 +134,20 @@ def add_review_entry_ajax(request, restaurant_id):
     except Exception as e:
         print(f"Error: {e}")
         return JsonResponse({"status": "error", "errors": str(e)}, status=500)
+
+@csrf_exempt
+def create_review_flutter(request):
+    if request.method == 'POST':
+
+        data = json.loads(request.body)
+        new_review = Review.objects.create(
+            user=request.user,
+            comment=data["comment"],
+            rating=int(data["rating"]),
+        )
+
+        new_review.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
