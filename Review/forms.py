@@ -1,4 +1,4 @@
-from django.forms import ModelForm, HiddenInput
+from django.forms import ModelForm, HiddenInput 
 from Review.models import Review
 
 class ReviewForm(ModelForm):
