@@ -82,3 +82,7 @@ def edit_notes(request, item_id):
             form.save()
             return JsonResponse({'status': 'success', 'notes': bookmark.notes})
         return JsonResponse({'status': 'error', 'errors': form.errors})
+    
+def show_json(request):
+    data = Bookmark.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
