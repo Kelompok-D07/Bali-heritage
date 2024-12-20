@@ -1,4 +1,5 @@
-import json
+from datetime import timezone
+import uuid
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from Review.models import Review
 from Review.forms import ReviewForm
@@ -10,6 +11,8 @@ from django.contrib.auth import authenticate
 from django.template.loader import render_to_string
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core import serializers
+from django.utils import timezone
+import json
 
 @login_required(login_url='/')
 def show_main(request):
@@ -55,6 +58,31 @@ def show_xml(request):
 def show_json(request):
     data = Review.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+def show_restaurant(request):
+    data = Restaurant.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+def myreview_json(request):
+    reviews = Review.objects.filter(user=request.user)
+    review_data = [
+        {
+            "model": "Review.review",
+            "pk": str(review.pk),
+            "fields": {
+            "user": review.user.username,
+            "rating": review.rating,
+            "comment": review.comment,
+            "time": review.time.isoformat(),
+            "restaurant": review.restaurant.name,
+            }
+        }
+        for review in reviews
+    ]
+
+    json_data = json.dumps(review_data)
+
+    return HttpResponse(json_data, content_type="application/json")
 
 def show_xml_by_id(request, id):
     data = Review.objects.filter(pk=id)
@@ -138,12 +166,14 @@ def add_review_entry_ajax(request, restaurant_id):
 @csrf_exempt
 def create_review_flutter(request):
     if request.method == 'POST':
-
+        nama_orang = request.user
+        print(nama_orang)
         data = json.loads(request.body)
         new_review = Review.objects.create(
             user=request.user,
             comment=data["comment"],
             rating=int(data["rating"]),
+            restaurant=Restaurant(data["restaurant"])
         )
 
         new_review.save()
