@@ -68,30 +68,43 @@ def get_restaurants(request):
     
 @csrf_exempt
 def create_product_flutter(request):
-    if request.method == 'POST':
+    print(request.headers)
+    if request.method == "POST":
         try:
-            # Parse JSON body
+            # Parse the incoming JSON data
             data = json.loads(request.body)
 
-            # Create new Product instance
+            # Extract product details from the received data
+            product_name = data.get('name')
+            product_description = data.get('description')
+            product_price = data.get('price')
+            product_image = data.get('image')
+            product_category_name = data.get('category')
+            restaurant_name = data.get('restaurant_name')
+
+            # Validate required fields
+            if not all([product_name, product_description, product_price, product_image, product_category_name, restaurant_name]):
+                return JsonResponse({"status": "error", "message": "All fields are required!"}, status=400)
+
+            # Retrieve the Category and Restaurant based on their names
+            category = get_object_or_404(Category, name=product_category_name)
+            restaurant = get_object_or_404(Restaurant, name=restaurant_name)
+
+            # Create the new product
             new_product = Product.objects.create(
-                name=data["name"],
-                description=data.get("description", ""),  # Use default empty string if not provided
-                price=data["price"],
-                image=data["image"],
-                category_id=data["category"],  # Assume category ID is passed
-                restaurant_name_id=data["restaurant_name"]  # Assume restaurant ID is passed
+                name=product_name,
+                description=product_description,
+                price=product_price,
+                image=product_image,
+                category=category,
+                restaurant=restaurant
             )
+        
+            return JsonResponse({"status": "success", "message": "Product has been added successfully!"})
 
-            # Save the Product instance
-            new_product.save()
-
-            # Return success response
-            return JsonResponse({"status": "success"}, status=200)
-
+        except json.JSONDecodeError:
+            return JsonResponse({"status": "error", "message": "Invalid JSON data"}, status=400)
         except Exception as e:
-            # Handle unexpected errors
-            return JsonResponse({"status": "error", "message": str(e)}, status=400)
-
-    # Return error for non-POST requests
-    return JsonResponse({"status": "error", "message": "Invalid request method"}, status=401)
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    else:
+        return JsonResponse({"status": "error", "message": "Only POST requests are allowed."}, status=405)
