@@ -30,12 +30,13 @@
             <div id="dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg" style="z-index: 9999;">
                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" id="registerLink" onclick="showPopup('registerPopup')">Register</a>
                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" id="loginLink" onclick="showPopup('loginPopup')">Login</a>
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hidden" id="logoutLink">Logout</a>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hidden" id="logoutLink" onclick="logout()">Logout</a>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Register Popup -->
 <div id="registerPopup" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" style="z-index: 9999;">
     <div class="bg-white rounded-lg p-6 w-80 relative">
         <button onclick="hidePopup('registerPopup')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
@@ -44,12 +45,14 @@
         <h2 class="text-lg font-bold mb-4">Register</h2>
         <form id="registerForm">
             <input type="text" name="username" placeholder="Username" required class="border p-2 mb-2 w-full rounded"/>
-            <input type="password" name="password" placeholder="Password" required class="border p-2 mb-2 w-full rounded"/>
+            <input type="password" name="password1" placeholder="Password" required class="border p-2 mb-2 w-full rounded"/>
+            <input type="password" name="password2" placeholder="Confirm Password" required class="border p-2 mb-2 w-full rounded"/>
             <button type="submit" class="bg-orange-500 text-white p-2 rounded w-full hover:bg-orange-700">Register</button>
         </form>
     </div>
 </div>
 
+<!-- Login Popup -->
 <div id="loginPopup" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" style="z-index: 9999;">
     <div class="bg-white rounded-lg p-6 w-80 relative">
         <button onclick="hidePopup('loginPopup')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
@@ -65,21 +68,23 @@
 </div>
 
 <script>
+    // Toggle the visibility of the dropdown menu
     function toggleDropdown() {
         const dropdown = document.getElementById('dropdown');
         dropdown.classList.toggle('hidden');
     }
 
-    // Toggle popup visibility
+    // Show popup for login or register
     function showPopup(popupId) {
         document.getElementById(popupId).classList.remove('hidden');
     }
 
+    // Hide the popup
     function hidePopup(popupId) {
         document.getElementById(popupId).classList.add('hidden');
     }
 
-    // Check cookie for authentication state
+    // Check the user's authentication status
     function checkAuthState() {
         const isLoggedIn = "{{ user.is_authenticated }}"; // Use Django template tag to get user state
 
@@ -95,83 +100,87 @@
         }
     }
 
-    // Handle form submissions
-    document.getElementById('registerForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const formData = new FormData(this);
-
-        fetch('/auth/register/', {
-            method: 'POST',
-            body: formData,
-            headers: {'X-CSRFToken': '{{ csrf_token }}'}
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Registration successful!');
-                hidePopup('registerPopup');
-                // Do not set the 'auth' cookie here
-                checkAuthState();  // Update button visibility
-            } else {
-                alert(data.error);
-            }
-        });
-    });
-
+    // Handle login form submission
     document.getElementById('loginForm').addEventListener('submit', function(event) {
         event.preventDefault();
         const formData = new FormData(this);
+        const formObject = {};
+        formData.forEach((value, key) => { formObject[key] = value });  // Convert FormData to an object
+
+        // Send the data as URLSearchParams instead of JSON
+        const urlEncodedData = new URLSearchParams(formObject).toString();
 
         fetch('/auth/login/', {
             method: 'POST',
-            body: formData,
-            headers: {'X-CSRFToken': '{{ csrf_token }}'}
+            body: urlEncodedData,  // Send form data as URL encoded
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/x-www-form-urlencoded'  // Correct content type
+            }
         })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
+            if (data.status) {
                 alert('Login successful!');
                 hidePopup('loginPopup');
-
-                // Set the 'auth' cookie after successful login
-                document.cookie = "auth=true; path=/; max-age=" + 60 * 60 * 24;
                 checkAuthState();  // Update button visibility
-                window.location.reload();
+                window.location.reload();  // Reload page to reflect login
             } else {
-                alert(data.error);
+                alert(data.message);
             }
         });
     });
 
-    document.getElementById('logoutLink').addEventListener('click', function(event) {
+    // Handle register form submission
+    document.getElementById('registerForm').addEventListener('submit', function(event) {
         event.preventDefault();
+        const formData = new FormData(this);
+        const formObject = {};
+        formData.forEach((value, key) => { formObject[key] = value });  // Convert FormData to an object
 
-        fetch('/auth/logout/', {
+        const urlEncodedData = new URLSearchParams(formObject).toString();
+
+        fetch('/auth/register/', {
             method: 'POST',
-            headers: {'X-CSRFToken': '{{ csrf_token }}'}
+            body: urlEncodedData,  // Send form data as URL encoded
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/x-www-form-urlencoded'  // Correct content type
+            }
         })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
-                alert('Logged out successfully!');
-                document.cookie = "auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            if (data.status) {
+                alert('Registration successful!');
+                hidePopup('registerPopup');
                 checkAuthState();  // Update button visibility
-                window.location.href = '/';  // Redirect to homepage after logout
+            } else {
+                alert(data.message);
             }
         });
     });
+
+    // Handle logout
+    function logout() {
+        fetch('/auth/logout/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'  // Ensure correct content type
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status) {
+                alert('Logout successful!');
+                checkAuthState();  // Update button visibility
+                window.location.reload();  // Reload page to reflect logout
+            } else {
+                alert(data.message);
+            }
+        });
+    }
 
     // Check authentication state on page load
     document.addEventListener('DOMContentLoaded', checkAuthState);
-
-    function checkLogin() {
-        const isLoggedIn = document.cookie.split(';').some(item => item.trim().startsWith('auth=true'));
-
-        if (!isLoggedIn) {
-            alert("You need to log in first.");
-            showPopup('loginPopup');
-        } else {
-            window.location.href = '/bookmarks/';
-        }
-    }
 </script>

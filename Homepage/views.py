@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render, reverse, get_object_or_404
 from .models import Product, Category, Restaurant
 from Review.models import Review
@@ -5,6 +6,7 @@ from bookmarks.models import Bookmark  # Make sure Category is imported
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template.loader import render_to_string
 from django.core import serializers
+from django.views.decorators.csrf import csrf_exempt
 
 
 def show_main(request):
@@ -54,3 +56,42 @@ def filter_product(request):
         html = render_to_string('card_product_main.html', {'products': products, 'bookmarked_product_ids': list(bookmarked_product_ids)}, request=request)
         return JsonResponse({'status': 'success', 'html': html})  # Mengembalikan HTML yang difilter
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+
+def get_categories(request):
+    data = Category.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+def get_restaurants(request):
+    data = Restaurant.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+    
+@csrf_exempt
+def create_product_flutter(request):
+    if request.method == 'POST':
+        try:
+            # Parse JSON body
+            data = json.loads(request.body)
+
+            # Create new Product instance
+            new_product = Product.objects.create(
+                name=data["name"],
+                description=data.get("description", ""),  # Use default empty string if not provided
+                price=data["price"],
+                image=data["image"],
+                category_id=data["category"],  # Assume category ID is passed
+                restaurant_name_id=data["restaurant_name"]  # Assume restaurant ID is passed
+            )
+
+            # Save the Product instance
+            new_product.save()
+
+            # Return success response
+            return JsonResponse({"status": "success"}, status=200)
+
+        except Exception as e:
+            # Handle unexpected errors
+            return JsonResponse({"status": "error", "message": str(e)}, status=400)
+
+    # Return error for non-POST requests
+    return JsonResponse({"status": "error", "message": "Invalid request method"}, status=401)
