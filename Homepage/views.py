@@ -65,6 +65,10 @@ def get_restaurants(request):
     data = Restaurant.objects.all()
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
+def get_restaurants(request):
+    data = Product.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
     
 @csrf_exempt
 def create_product_flutter(request):
@@ -99,7 +103,9 @@ def create_product_flutter(request):
                 category=category,
                 restaurant=restaurant
             )
-        
+
+            new_product.save()
+
             return JsonResponse({"status": "success", "message": "Product has been added successfully!"})
 
         except json.JSONDecodeError:
