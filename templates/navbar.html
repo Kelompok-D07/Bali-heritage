@@ -68,6 +68,18 @@
 </div>
 
 <script>
+    function checkLogin() {
+        const isLoggedIn = "{{ user.is_authenticated }}"; // Use Django template tag to get user state
+
+        if (isLoggedIn === "True") {
+            // Redirect logged-in users to the bookmarks page
+            window.location.href = "/bookmarks/";
+        } else {
+            // Show login popup for non-logged-in users
+            showPopup('loginPopup');
+        }
+    }
+    
     // Toggle the visibility of the dropdown menu
     function toggleDropdown() {
         const dropdown = document.getElementById('dropdown');
