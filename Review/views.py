@@ -166,18 +166,26 @@ def add_review_entry_ajax(request, restaurant_id):
 @csrf_exempt
 def create_review_flutter(request):
     if request.method == 'POST':
-        nama_orang = request.user
-        print(nama_orang)
+        orang = request.user
+        print(orang)
         data = json.loads(request.body)
+        
+        # Fetch the Restaurant instance or return a 404 error if not found
+        restaurant = get_object_or_404(Restaurant, pk=data["restaurant"])
+
+        # Ensure the user is authenticated
+        if not request.user.is_authenticated:
+            return JsonResponse({"status": "error", "message": "User not authenticated"}, status=401)
+        
+        # Create the Review object
         new_review = Review.objects.create(
             user=request.user,
             comment=data["comment"],
             rating=int(data["rating"]),
-            restaurant=Restaurant(data["restaurant"])
+            restaurant=restaurant
         )
-
+        
         new_review.save()
-
         return JsonResponse({"status": "success"}, status=200)
     else:
         return JsonResponse({"status": "error"}, status=401)
