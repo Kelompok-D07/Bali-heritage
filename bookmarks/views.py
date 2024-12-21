@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render, redirect, get_object_or_404
 from bookmarks.models import Bookmark
 from Homepage.models import Category, Product
@@ -44,6 +45,7 @@ def add_to_bookmarks(request):
 
 @csrf_exempt
 def delete_bookmarks_item(request, item_id):
+    print("deleted item: " + str(item_id))
     if request.method == 'POST':
         if request.user.is_authenticated:
             try:
@@ -83,6 +85,63 @@ def edit_notes(request, item_id):
             return JsonResponse({'status': 'success', 'notes': bookmark.notes})
         return JsonResponse({'status': 'error', 'errors': form.errors})
     
+
+## Flutter
+# @login_required(login_url='/')
 def show_json(request):
     data = Bookmark.objects.filter(user=request.user)
-    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+    bookmarks_data = [
+        {
+            "model": "bookmarks.bookmark",
+            "pk": bookmark.pk,
+            "fields": {
+                "user": bookmark.user.username,
+                "user_id": bookmark.user.id,
+                "product": bookmark.product.name,
+                "product_id": bookmark.product.id,
+                "image": bookmark.product.image,
+                "notes": bookmark.notes,
+                "description": bookmark.product.description
+            }
+        }
+        for bookmark in data
+    ]
+
+    return JsonResponse(bookmarks_data, safe=False)
+
+
+@csrf_exempt
+def edit_notes_flutter(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            product_name = data.get('item_name')  # Ambil ID bookmark
+            new_notes = data.get('new_notes')  # Ambil notes baru
+            bookmark = get_object_or_404(Bookmark, product__name=product_name, user=request.user)
+
+            # Update notes dan simpan ke database
+            bookmark.notes = new_notes
+            bookmark.save()
+            return JsonResponse({'status': 'success', 'message': 'Notes updated successfully', 'new_notes': bookmark.notes})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON data'}, status=400)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+
+
+@csrf_exempt
+def delete_bookmarks_flutter(request, product_name):
+    if request.method == 'POST':
+        try:
+            item = get_object_or_404(Bookmark, product__name=product_name, user=request.user)
+            item_name = item.product.name
+            item.delete()
+            return JsonResponse({'status': 'success'})
+        except Bookmark.DoesNotExist:
+            return JsonResponse({'status': item_name + " not found in Bookmarks"}, status=404)
+    return JsonResponse({'status': "Invalid request method"}, status=400)
+
