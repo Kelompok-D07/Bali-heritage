@@ -108,9 +108,3 @@ def check_admin(request):
             "status": True,
             "message": "Admin status fetched successfully."
         }, status=200)
-    else:
-        return JsonResponse({
-            "is_admin": False,
-            "status": False,
-            "message": "User is not logged in."
-        }, status=401)
