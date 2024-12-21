@@ -87,10 +87,16 @@ def edit_notes(request, item_id):
     
 
 ## Flutter
-# @login_required(login_url='/')
 def show_json(request):
-    data = Bookmark.objects.filter(user=request.user)
+    category_id = request.GET.get('category', None)
+    
+    if category_id and category_id != 'ALL':
+        category = Category.objects.get(pk=category_id)
+        data = Bookmark.objects.filter(user=request.user, product__category=category)
+    else:
+        data = Bookmark.objects.filter(user=request.user)
 
+    
     bookmarks_data = [
         {
             "model": "bookmarks.bookmark",
@@ -102,7 +108,8 @@ def show_json(request):
                 "product_id": bookmark.product.id,
                 "image": bookmark.product.image,
                 "notes": bookmark.notes,
-                "description": bookmark.product.description
+                "description": bookmark.product.description,
+                "restaurant_name": str(bookmark.product.restaurant_name.id)
             }
         }
         for bookmark in data
