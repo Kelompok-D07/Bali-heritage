@@ -1,6 +1,6 @@
 from django.urls import path
 from Homepage.views import show_main, restaurant, filter_product, get_categories, get_restaurants, get_products, create_product_flutter, get_restaurant_flutter, filter_product_flutter, get_products_by_category
-
+from Homepage.views import delete_product_flutter
 app_name = 'Homepage'
 
 urlpatterns = [
@@ -14,4 +14,5 @@ urlpatterns = [
     path('get-restaurant-flutter/', get_restaurant_flutter, name='get_restaurant_flutter'),
     path('filter-product-flutter/', filter_product_flutter, name='filter_product_flutter'),
     path('get-products-by-category/', get_products_by_category, name='get_products_by_category'),
+    path('delete-product-flutter/', delete_product_flutter, name='delete_product_flutter'),
 ]
