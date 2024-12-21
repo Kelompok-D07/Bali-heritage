@@ -121,3 +121,82 @@ def create_product_flutter(request):
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
     else:
         return JsonResponse({"status": "error", "message": "Only POST requests are allowed."}, status=405)
+
+@csrf_exempt
+def filter_product_flutter(request):
+    if request.method == "POST":
+        try:
+            # Parse the incoming JSON data
+            data = json.loads(request.body)
+            category_name = data.get('category')
+
+            if category_name:  # If a category is provided, filter products by that category
+                try:
+                    category = get_object_or_404(Category, name=category_name)
+                except Http404:
+                    return JsonResponse({"status": "error", "message": "Category not found"}, status=404)
+
+                products = Product.objects.filter(category=category)
+            else:  # If no category is provided, return all products
+                products = Product.objects.all()
+
+            serialized_products = serializers.serialize("json", products)
+
+            return JsonResponse({"status": "success", "data": json.loads(serialized_products)}, status=200)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"status": "error", "message": "Invalid JSON data"}, status=400)
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    else:
+        return JsonResponse({"status": "error", "message": "Only POST requests are allowed."}, status=405)
+    
+@csrf_exempt
+def get_restaurant_flutter(request):
+    print('hello')
+    if request.method == "POST":
+        try:
+            # Parse the incoming JSON data
+            data = json.loads(request.body)
+            restaurant_name = data.get('restaurant_name')
+
+            if restaurant_name:  # If a restaurant name is provided
+                try:
+                    print('hello2')
+                    print(data)
+                    print(restaurant_name)
+                    
+                    # Assuming restaurant_name is an ID or a unique identifier
+                    restaurant = get_object_or_404(Restaurant, id=restaurant_name)
+                    print(restaurant.name)
+                    
+                    # Get products related to the restaurant
+                    products = Product.objects.filter(restaurant_name=restaurant)
+                    print(products)
+
+                    # Serialize restaurant and products into JSON
+                    restaurant_data = serializers.serialize("json", [restaurant])
+                    products_data = serializers.serialize("json", products)
+
+                    # Combine restaurant and product data into the response
+                    response_data = {
+                        "restaurant": json.loads(restaurant_data)[0],  # Convert to dictionary
+                        "products": json.loads(products_data)  # Convert to list of dictionaries
+                    }
+
+                    print(response_data)
+
+                    return JsonResponse({"status": "success", "data": response_data}, status=200)
+
+                except Http404:
+                    return JsonResponse({"status": "error", "message": "Restaurant not found"}, status=404)
+
+            else:
+                return JsonResponse({"status": "error", "message": "Restaurant name is required."}, status=400)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"status": "error", "message": "Invalid JSON data"}, status=400)
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    else:
+        return JsonResponse({"status": "error", "message": "Only POST requests are allowed."}, status=405)
