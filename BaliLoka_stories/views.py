@@ -112,7 +112,7 @@ def create_stories_flutter(request):
 
         # Membuat entri baru
         new_stories = StoriesEntry.objects.create(
-            user=request.user,
+            # user=request.user,
             name=data["name"],
             image=image_file,  # Simpan file
             description=data["description"]
@@ -131,9 +131,24 @@ def show_xml(request):
     data = StoriesEntry.objects.all()
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
 
-def show_json(request):
-    data = StoriesEntry.objects.all()
+# def show_json(request):
+#     data = StoriesEntry.objects.all()
+
+# def show_json(request):
+#     data = StoriesEntry.objects.all()
+#     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 def show_json(request):
     data = StoriesEntry.objects.all()
-    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+    stories_list = []
+
+    for story in data:
+        stories_list.append({
+            "name": story.name,
+            "description": story.description,
+            "image": request.build_absolute_uri(story.image.url) if story.image else None,
+        })
+
+     # Debugging respons JSON di Django
+    # print(json.dumps(stories_list, indent=4))  # Debugging data yang dikirim
+    return JsonResponse(stories_list, safe=False)

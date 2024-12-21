@@ -1,4 +1,6 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from BaliLoka_stories.views import show_stories, create_stories_entry, show_xml, show_json, add_stories_entry_ajax, edit_stories, delete_stories, create_stories_flutter
 
 
@@ -13,4 +15,4 @@ urlpatterns = [
     path('edit-stories/<uuid:id>', edit_stories, name='edit_stories'),
     path('delete-stories/<uuid:id>', delete_stories, name='delete_stories'),
     path('create-flutter/', create_stories_flutter, name='create_stories_flutter'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
