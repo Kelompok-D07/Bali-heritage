@@ -63,12 +63,12 @@ def show_restaurant(request):
     data = Restaurant.objects.all()
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
-def myreview_json(request):
-    reviews = Review.objects.filter(user=request.user)
+def myreview_json(request): #Menampilkan Review untuk flutter
+    reviews = Review.objects.all()
     review_data = [
         {
             "model": "Review.review",
-            "pk": str(review.pk),
+            "pk": review.pk,
             "fields": {
             "user": review.user.username,
             "rating": review.rating,
@@ -80,9 +80,7 @@ def myreview_json(request):
         for review in reviews
     ]
 
-    json_data = json.dumps(review_data)
-
-    return HttpResponse(json_data, content_type="application/json")
+    return JsonResponse(review_data, safe=False)
 
 def show_xml_by_id(request, id):
     data = Review.objects.filter(pk=id)
@@ -166,8 +164,6 @@ def add_review_entry_ajax(request, restaurant_id):
 @csrf_exempt
 def create_review_flutter(request):
     if request.method == 'POST':
-        orang = request.user
-        print(orang)
         data = json.loads(request.body)
         
         # Fetch the Restaurant instance or return a 404 error if not found
@@ -189,3 +185,36 @@ def create_review_flutter(request):
         return JsonResponse({"status": "success"}, status=200)
     else:
         return JsonResponse({"status": "error"}, status=401)
+    
+@csrf_exempt
+def edit_review_flutter(request, id):
+    if request.method == 'POST':  # atau PUT, sesuai keinginan
+        try:
+            review = Review.objects.get(pk=id, user=request.user)
+        except Review.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Review not found or unauthorized'}, status=403)
+
+        comment = request.POST.get('comment')
+        rating = request.POST.get('rating')
+
+        review.comment = comment
+        review.rating = rating
+        review.save()
+
+        return JsonResponse({'status': 'success'}, status=200)
+
+    # Atur response lain jika bukan POST
+    return JsonResponse({'status': 'error', 'message': 'Invalid method'}, status=405)
+
+@csrf_exempt
+def delete_review_flutter(request, id):
+    if request.method == 'DELETE' or request.method == 'POST':
+        try:
+            review = Review.objects.get(pk=id, user=request.user)
+        except Review.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Review not found or unauthorized'}, status=403)
+
+        review.delete()
+        return JsonResponse({'status': 'success'}, status=200)
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid method'}, status=405)
