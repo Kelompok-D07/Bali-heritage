@@ -163,7 +163,6 @@ def filter_product_flutter(request):
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
     else:
         return JsonResponse({"status": "error", "message": "Only POST requests are allowed."}, status=405)
-
     
 @csrf_exempt
 def get_restaurant_flutter(request):
@@ -173,6 +172,7 @@ def get_restaurant_flutter(request):
             # Parse the incoming JSON data
             data = json.loads(request.body)
             restaurant_name = data.get('restaurant_name')
+            print(restaurant_name)
 
             if restaurant_name:  # If a restaurant name is provided
                 try:
@@ -206,3 +206,18 @@ def get_restaurant_flutter(request):
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
     else:
         return JsonResponse({"status": "error", "message": "Only POST requests are allowed."}, status=405)
+    
+@csrf_exempt
+def delete_product_flutter(request):
+    if request.method == 'DELETE' or request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            id = data.get('id')
+            product = Product.objects.get(pk=id)
+        except Product.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Review not found or unauthorized'}, status=403)
+
+        product.delete()
+        return JsonResponse({'status': 'success'}, status=200)
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid method'}, status=405)
