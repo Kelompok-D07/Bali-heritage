@@ -63,24 +63,34 @@ def show_restaurant(request):
     data = Restaurant.objects.all()
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
-def myreview_json(request): #Menampilkan Review untuk flutter
-    reviews = Review.objects.all()
+def myreview_json(request):  # Menampilkan Review untuk Flutter
+    # Ambil parameter restaurant_id (opsional)
+    restaurant_id = request.GET.get('restaurant_id')
+
+    if restaurant_id:
+        # Jika ada restaurant_id, filter review berdasarkan pk restoran
+        reviews = Review.objects.filter(restaurant__pk=restaurant_id)
+    else:
+        # Jika tidak ada, ambil semua review
+        reviews = Review.objects.all()
+
     review_data = [
         {
             "model": "Review.review",
             "pk": review.pk,
             "fields": {
-            "user": review.user.username,
-            "rating": review.rating,
-            "comment": review.comment,
-            "time": review.time.isoformat(),
-            "restaurant": review.restaurant.name,
+                "user": review.user.username,
+                "rating": review.rating,
+                "comment": review.comment,
+                "time": review.time.isoformat(),
+                "restaurant": review.restaurant.name,
             }
         }
         for review in reviews
     ]
 
     return JsonResponse(review_data, safe=False)
+
 
 def show_xml_by_id(request, id):
     data = Review.objects.filter(pk=id)
