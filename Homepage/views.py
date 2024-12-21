@@ -86,7 +86,6 @@ def get_products_by_category(request):
 
 @csrf_exempt
 def create_product_flutter(request):
-    print('hello')
     if request.method == "POST":
         try:
             # Parse the incoming JSON data
@@ -103,19 +102,15 @@ def create_product_flutter(request):
             # Retrieve the Category and Restaurant based on their names
             try:
                 category = get_object_or_404(Category, name=product_category_name)
-                print(category)
             except Http404:
                 return JsonResponse({"status": "error", "message": "Category not found"}, status=404)
 
             try:
                 restaurant = get_object_or_404(Restaurant, name=restaurant_name)
-                print(restaurant.description)
             except Http404:
                 return JsonResponse({"status": "error", "message": "Restaurant not found"}, status=404)
 
             # Create the new product
-            print('hello2')
-            print(product_image)
             new_product = Product.objects.create(
                 name=product_name,
                 description=product_description,
@@ -124,7 +119,6 @@ def create_product_flutter(request):
                 category=category,
                 restaurant_name=restaurant
             )
-            print('hello3')
             new_product.save()
 
             return JsonResponse({"status": "success", "message": "Product has been added successfully!"})
@@ -166,7 +160,6 @@ def filter_product_flutter(request):
     
 @csrf_exempt
 def get_restaurant_flutter(request):
-    print('hello')
     if request.method == "POST":
         try:
             # Parse the incoming JSON data
