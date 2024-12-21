@@ -145,3 +145,32 @@ def delete_bookmarks_flutter(request, product_name):
             return JsonResponse({'status': item_name + " not found in Bookmarks"}, status=404)
     return JsonResponse({'status': "Invalid request method"}, status=400)
 
+
+
+@csrf_exempt
+def toggle_bookmark(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            product_name = data.get('product_name')
+
+            if not product_name:
+                return JsonResponse({"status": "error", "message": "Product name is required."}, status=400)
+
+            bookmark_exists = Bookmark.objects.filter(user=request.user, product__name=product_name).exists()
+
+            if bookmark_exists:
+                # Jika sudah ada, hapus dari bookmark
+                item = Bookmark.objects.get(user=request.user, product__name=product_name)
+                item.delete()
+                return JsonResponse({"status": "success", "message": "Product berhasil dihapus dari Bookmark."}, status=200)
+            else:
+                # Jika belum ada, tambahkan ke bookmark
+                product = Product.objects.get(name=product_name)
+                Bookmark.objects.create(user=request.user, product=product)
+                return JsonResponse({"status": "success", "message": "Product berhasil ditambahkan ke Bookmark."}, status=201)
+
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    else:
+        return JsonResponse({"status": "error", "message": "Only POST requests are allowed."}, status=405)
