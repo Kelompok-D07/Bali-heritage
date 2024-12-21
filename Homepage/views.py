@@ -3,7 +3,7 @@ from django.shortcuts import render, reverse, get_object_or_404
 from .models import Product, Category, Restaurant
 from Review.models import Review
 from bookmarks.models import Bookmark  # Make sure Category is imported
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import Http404, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template.loader import render_to_string
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
@@ -65,33 +65,59 @@ def get_restaurants(request):
     data = Restaurant.objects.all()
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
+def get_products(request):
+    data = Product.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
     
 @csrf_exempt
 def create_product_flutter(request):
-    if request.method == 'POST':
+    print('hello')
+    if request.method == "POST":
         try:
-            # Parse JSON body
+            # Parse the incoming JSON data
             data = json.loads(request.body)
 
-            # Create new Product instance
-            new_product = Product.objects.create(
-                name=data["name"],
-                description=data.get("description", ""),  # Use default empty string if not provided
-                price=data["price"],
-                image=data["image"],
-                category_id=data["category"],  # Assume category ID is passed
-                restaurant_name_id=data["restaurant_name"]  # Assume restaurant ID is passed
-            )
+            # Extract product details from the received data
+            product_name = data.get('name')
+            product_description = data.get('description')
+            product_price = data.get('price')
+            product_image = data.get('image')
+            product_category_name = data.get('category')
+            restaurant_name = data.get('restaurant_name')
 
-            # Save the Product instance
+            # Retrieve the Category and Restaurant based on their names
+            try:
+                category = get_object_or_404(Category, name=product_category_name)
+                print(category)
+            except Http404:
+                return JsonResponse({"status": "error", "message": "Category not found"}, status=404)
+
+            try:
+                restaurant = get_object_or_404(Restaurant, name=restaurant_name)
+                print(restaurant.description)
+            except Http404:
+                return JsonResponse({"status": "error", "message": "Restaurant not found"}, status=404)
+
+            # Create the new product
+            print('hello2')
+            print(product_image)
+            new_product = Product.objects.create(
+                name=product_name,
+                description=product_description,
+                price=float(product_price),
+                image=product_image,
+                category=category,
+                restaurant_name=restaurant
+            )
+            print('hello3')
             new_product.save()
 
-            # Return success response
-            return JsonResponse({"status": "success"}, status=200)
+            return JsonResponse({"status": "success", "message": "Product has been added successfully!"})
 
+        except json.JSONDecodeError:
+            return JsonResponse({"status": "error", "message": "Invalid JSON data"}, status=400)
         except Exception as e:
-            # Handle unexpected errors
-            return JsonResponse({"status": "error", "message": str(e)}, status=400)
-
-    # Return error for non-POST requests
-    return JsonResponse({"status": "error", "message": "Invalid request method"}, status=401)
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    else:
+        return JsonResponse({"status": "error", "message": "Only POST requests are allowed."}, status=405)
